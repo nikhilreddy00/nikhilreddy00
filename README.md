@@ -51,3 +51,28 @@ _Optimized urban transit with a predictive model achieving 79% accuracy._
 🔗 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/uvnikhil/)  
 📧 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:venkatanikhilkumarreddyu@gwu.edu)  
 🚀 Always open to collaborations & data-driven discussions!  
+
+---
+
+## 🏆 Achievements
+- **SEAS Dean's Award** at GWU for outstanding academic performance.
+
+## 🎓 Education
+- **Master of Science in Data Analytics**, The George Washington University (GWU)
+- **Bachelor of Technology in Computer Science**, Dayananda Sagar University
+
+## 👨‍💻 Work Experience
+**Research Assistant II**  
+*Milken Institute School of Public Health*  
+- Oversee data collection, processing, and analysis leveraging Qualtrics, Vlab-Bailer, Typeform, Facebook, and Meta, while designing visuals with Power BI, Tableau, and Python.
+- Refine large datasets through cleaning, transformation, and validation, perform statistical analyses, and collaborate with NIH representatives, research teams, and campaign partners to evaluate digital media interventions on vaping and smoking.
+- Implementing predictive models and data-driven insights to assess the impact of digital health campaigns, optimizing intervention strategies for smoking and vaping prevention.
+
+
+**Data Science Intern**  
+*Slash Mark IT Solutions*  
+- Developed and deployed machine learning models to hone decision-making across business functions, leveraging Python, pandas, and scikit-learn for advanced preprocessing, feature engineering, and model training.
+- Executed comprehensive data analysis, including cleaning, transformation, and statistical evaluation, uncovering actionable insights that revamped data accuracy by 95% and boosted model performance by 17%.
+- Presented key findings through detailed reports and visualizations, catalyzing stakeholders to make informed decisions, increasing operational efficiency by 30% and driving a 23% improvement in strategic outcomes.
+
+Happy Analyzing! 🚀
