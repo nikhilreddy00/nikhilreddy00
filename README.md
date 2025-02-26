@@ -33,11 +33,11 @@
 ---
 
 ## 📂 Featured Projects  
-📌 **[Electricity Pricing Forecast](GitHub Repo Link)**  
+📌 **[NYISO Electricity Consumption and Pricing Insights](https://github.com/nikhilreddy00/NYSO-Electricity-Consumption-and-Pricing-Insights.git)**  
 _Built a forecasting model using PySpark & MLlib with 92% accuracy._  
 
-📌 **[NYC Taxi Analytics](GitHub Repo Link)**  
-_Optimized urban transit with a predictive model achieving 78% accuracy._  
+📌 **[Urban Transit Optimization and Fare Prediction - NYC Taxi Analytics](https://github.com/nikhilreddy00/Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics.git)**  
+_Optimized urban transit with a predictive model achieving 79% accuracy._  
 
 ---
 
