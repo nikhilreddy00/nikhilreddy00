@@ -1,6 +1,6 @@
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 <!--                     NIKHIL KUMAR REDDY                           -->
-<!--              GitHub Profile README · ML Engineer                  -->
+<!--              GitHub Profile README · AI/ML Engineer                  -->
 <!-- ═══════════════════════════════════════════════════════════════════ -->
 
 <p align="center">
