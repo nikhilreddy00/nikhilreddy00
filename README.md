@@ -29,7 +29,13 @@ Run a command on my profile agent without leaving GitHub. Click one, then **Crea
   <a href="https://github.com/nikhilreddy00/nikhilreddy00/issues/new?title=agent%3A%20help&body=Click%20%2A%2ACreate%2A%2A%20%2F%20%2A%2ASubmit%20new%20issue%2A%2A%20to%20run%20this%20command.%20My%20profile%20agent%20replies%20here%20in%20about%2030%20seconds%2C%20then%20closes%20the%20issue.%0A%0A_Only%20the%20command%20in%20the%20title%20is%20read.%20Your%20run%20is%20listed%20on%20my%20profile%20with%20your%20username._"><img alt="run help" src="https://img.shields.io/badge/%E2%96%B6%20help-161b22?style=for-the-badge&labelColor=161b22"></a>
 </p>
 
-<!--live:agent:start-->_No runs yet. Be the first: click a command above._<!--live:agent:end-->
+<!--live:agent:start-->
+**1 command** run by **1 visitor** so far. Latest:
+
+| Visitor | Ran | When (UTC) |
+| :-- | :-- | :-- |
+| [@nikhilreddy00](https://github.com/nikhilreddy00) | `whoami` | 2026-10-16 04:34 |
+<!--live:agent:end-->
 
 <sub>Commands only, a few per visitor per day. Want to type freely? Use the <a href="https://nikhilreddy00.github.io/nikhilreddy00/#terminal">interactive terminal</a>.</sub>
 
@@ -179,4 +185,4 @@ stack:      Python · TypeScript · SQL · PySpark · Next.js · Postgres · Dat
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 04:33 UTC<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 04:35 UTC<!--live:updated:end--></sub>
