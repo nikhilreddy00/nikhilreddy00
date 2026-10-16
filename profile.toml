@@ -1,0 +1,40 @@
+# Settings for the live profile. The hourly workflow reads this file,
+# pulls fresh numbers from the GitHub API and regenerates assets/ and the
+# live sections of README.md.
+
+login = "nikhilreddy00"
+
+[identity]
+name = "Nikhil Reddy"
+headline = "AI Engineer"
+current_role = "Data Scientist"
+current_org = "Echelon Insights"
+
+[projects]
+# Pinned at the top of the README with hand-written copy; the auto list skips them.
+featured = ["praxis", "AnalystAI"]
+# How many of the most recently pushed public repos to list automatically.
+recent_count = 5
+# Repos that never appear anywhere (the profile repo itself, experiments, ...).
+exclude = ["nikhilreddy00"]
+
+[languages]
+# Notebook bytes are mostly embedded outputs and plots, and HTML/CSS is mostly
+# generated pages, so both would drown out real source code. Those repos
+# still count toward every other metric.
+exclude = ["Jupyter Notebook", "HTML", "CSS"]
+top = 5
+
+[latent_space]
+# Candidate names for the clusters found in your repos. Each cluster takes
+# the name whose keywords best match its strongest terms; clusters that
+# match nothing get named from their top two terms instead.
+[latent_space.labels]
+"Voice agents" = ["voice", "call", "calls", "phone", "speech", "twilio", "appointment", "discharge", "vapi", "livekit"]
+"Computer use" = ["playwright", "browser", "replay", "record", "legacy", "automation", "capability", "takeover"]
+"Agentic RAG" = ["rag", "retrieval", "vector", "vectorless", "qdrant", "embedding", "chunk", "rerank", "edgar", "filings", "10-k", "sec"]
+"Health AI" = ["drug", "fda", "pubmed", "patient", "patients", "clinical", "clinic", "health", "mental", "pharmacovigilance", "nurse", "biomedical"]
+"Multi-agent systems" = ["multi-agent", "agents", "langgraph", "simulation", "crewai", "orchestration", "analyst", "swarm"]
+"Document Q&A" = ["pdf", "question", "answering", "langchain", "chatbot", "qa"]
+"Classical ML" = ["regression", "classification", "xgboost", "churn", "prediction", "mnist", "forest", "premium", "neural"]
+"Data analytics" = ["analysis", "insights", "eda", "dashboard", "consumption", "pricing", "taxi", "loan", "electricity"]
