@@ -78,10 +78,14 @@ def readme_excerpt(repo: str, limit: int = 18) -> list[str]:
     return lines[:limit] + (["…"] if len(lines) > limit else [])
 
 
-def update_readme() -> None:
+def update_readme(just_answered: dict | None = None) -> None:
     data = json.loads((ROOT / "site" / "data.json").read_text())
+    issues = agent_issues()
+    # The label filter can lag a few seconds behind the label we just added.
+    if just_answered and all(i["number"] != just_answered["number"] for i in issues):
+        issues.insert(0, just_answered)
     path = ROOT / "README.md"
-    path.write_text(replace_section(path.read_text(), "agent", agent.sessions_section(agent_issues(), data, REPO)))
+    path.write_text(replace_section(path.read_text(), "agent", agent.sessions_section(issues, data, REPO)))
 
 
 def respond() -> None:
@@ -118,12 +122,13 @@ def respond() -> None:
     api("PATCH", f"/repos/{REPO}/issues/{number}", {"state": "closed", "state_reason": "completed"})
     api("PUT", f"/repos/{REPO}/issues/{number}/lock", {"lock_reason": "resolved"}, ok=(204,))
     print(f"Answered #{number}: @{user} ran `{agent.display(cmd, args)}`")
-    update_readme()
+    created = os.environ.get("ISSUE_CREATED_AT") or dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    update_readme({"number": number, "title": title, "user": user, "created_at": created})
 
 
 if __name__ == "__main__":
     try:
-        {"respond": respond, "sessions": update_readme}[sys.argv[1] if len(sys.argv) > 1 else "respond"]()
+        {"respond": respond, "sessions": lambda: update_readme()}[sys.argv[1] if len(sys.argv) > 1 else "respond"]()
     except Exception as exc:
         # Surface the reason as a workflow annotation (visible in the Actions UI and API).
         print(f"::error title=Profile agent failed::{type(exc).__name__}: {str(exc)[:500]}")

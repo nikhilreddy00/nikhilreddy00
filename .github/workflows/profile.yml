@@ -45,6 +45,11 @@ jobs:
           PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
         run: python scripts/build_profile.py
 
+      - name: Refresh the agent session log
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/agent.py sessions
+
       - name: Commit if anything changed
         id: commit
         run: |
