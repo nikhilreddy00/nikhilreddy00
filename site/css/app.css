@@ -157,7 +157,7 @@ main { max-width: 1240px; margin: 0 auto; padding-block: 20px 8px;
 .kpi .value { font: 700 26px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
 .kpi .sub { font: 11.5px var(--mono); color: var(--muted); }
 .kpi .sub.up { color: var(--good); } .kpi .sub.down { color: var(--bad); }
-.grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px; }
+.grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px; align-items: start; }
 @media (max-width: 900px) { .grid { grid-template-columns: minmax(0, 1fr); } }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
 .card h3 { margin: 0 0 8px; font: 600 13px var(--mono); display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline; }

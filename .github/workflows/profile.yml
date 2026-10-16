@@ -80,3 +80,13 @@ jobs:
           path: site
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Check the live site responds
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsS "${{ steps.deployment.outputs.page_url }}data.json" -o /dev/null \
+               && curl -fsS "${{ steps.deployment.outputs.page_url }}" | grep -q "Agent OS"; then
+              echo "Live at ${{ steps.deployment.outputs.page_url }}"; exit 0
+            fi
+            sleep 10
+          done
+          echo "Site did not respond after deploy"; exit 1

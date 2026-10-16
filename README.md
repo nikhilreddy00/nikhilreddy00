@@ -4,10 +4,14 @@
   Everything else in this file is hand-written: edit it freely.
 -->
 
+<a href="https://nikhilreddy00.github.io/nikhilreddy00/#terminal">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/agent-trace-dark.svg">
   <img alt="Agent run log: who I am, my latest repos, last 30 days of activity and top languages, refreshed hourly" src="assets/agent-trace-light.svg" width="100%">
 </picture>
+</a>
+
+<p align="center"><b>▶ This page is a snapshot. The live version is interactive:</b> <a href="https://nikhilreddy00.github.io/nikhilreddy00/#terminal">type in the terminal</a> · <a href="https://nikhilreddy00.github.io/nikhilreddy00/#map">drag the latent space</a> · <a href="https://nikhilreddy00.github.io/nikhilreddy00/#dashboard">filter the dashboard</a></p>
 
 ## Nikhil Reddy · AI Engineer
 
@@ -40,12 +44,14 @@ I put deterministic guardrails outside the model wherever correctness matters, a
 
 ### Latent space of my work
 
+<a href="https://nikhilreddy00.github.io/nikhilreddy00/#map">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/latent-space-dark.svg">
   <img alt="Map of my public repositories, placed by what they are about and grouped into clusters" src="assets/latent-space-light.svg" width="100%">
 </picture>
+</a>
 
-<sub>Every public repo is embedded from its README, description and topics (TF-IDF → LSA), clustered with k-means, and projected to 2-D. A new repo appears on the map within the hour.</sub>
+<sub>Every public repo is embedded from its README, description and topics (TF-IDF → LSA), clustered with k-means, and projected to 2-D. A new repo appears on the map within the hour. <a href="https://nikhilreddy00.github.io/nikhilreddy00/#map"><b>Drag the bubbles yourself →</b></a></sub>
 
 <details>
 <summary><b>How the map is computed</b> · what each cluster contains and the terms that define it</summary>
@@ -82,10 +88,14 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ### Training run
 
+<a href="https://nikhilreddy00.github.io/nikhilreddy00/#dashboard">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/training-run-dark.svg">
   <img alt="Activity dashboard: daily contributions over 90 days, new repos as checkpoints, language mix, streaks and totals" src="assets/training-run-light.svg" width="100%">
 </picture>
+</a>
+
+<sub><a href="https://nikhilreddy00.github.io/nikhilreddy00/#dashboard"><b>Open the interactive dashboard →</b></a> hover for exact values, drag across the chart to filter every tile, click a language to filter projects.</sub>
 
 <details>
 <summary><b>Drill down: last 12 months</b> · contribution heatmap and weekday profile</summary>
