@@ -162,7 +162,24 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 </details>
 
-### Experience
+### Career
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/career-dark.svg">
+  <img alt="Career as a git log: Data Scientist at Echelon Insights (2026–now); AI Engineer at Milken Institute SPH, GWU (2025–2026); Data Science Consultant at DSSD (2024); Data Scientist, Conversational AI at Cogno AI (2023–2024); MS Data Analytics, GWU (2026); B.Tech Computer Science, Dayananda Sagar University (2024)" src="assets/career-light.svg" width="100%">
+</picture>
+
+### How I build
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/stack-dark.svg">
+  <img alt="Stack as a pipeline. Data: Python, SQL, PySpark, Databricks, Snowflake, Postgres. Retrieval: BM25 + dense, reranking, Qdrant, FAISS, ChromaDB. Models: Claude, GPT, Llama, BERT, LoRA/QLoRA, PyTorch. Agents: LangGraph, CrewAI, MCP, tool calling, human-in-the-loop, guardrails. Evals: RAGAS, DeepEval, LangSmith, LLM-as-judge, A/B tests, drift detection. Ship: FastAPI, Docker, SageMaker, Bedrock, MLflow, GitHub Actions" src="assets/stack-light.svg" width="100%">
+</picture>
+
+<details>
+<summary><b>Plain-text version</b> · experience, stack and education as text</summary>
+
+<br>
 
 | When | Role | Highlights |
 | :-- | :-- | :-- |
@@ -171,18 +188,11 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 | Aug – Dec 2024 | **Data Science Consultant** · Data Science for Sustainable Development | FAISS semantic search across JSON, CSV and Parquet that surfaced ~1,200 mismatched records. PySpark feature pipelines on Databricks cut study prep from two days to four hours. |
 | May 2023 – May 2024 | **Data Scientist, Conversational AI** · Cogno AI (acquired by Exotel) | Intent classification across 40+ banking intents (macro-F1 0.71 → 0.86). Agent-assist retrieval over 10K documents (top-3 relevance 62% → 84%). FastAPI serving at 380 ms p95. |
 
-### Toolbox
-
-```yaml
-agents:     LangGraph · CrewAI · MCP · tool calling · human-in-the-loop · guardrails
-retrieval:  hybrid BM25 + dense · reranking · chunking · Qdrant · FAISS · ChromaDB · Pinecone
-models:     Claude · GPT · Llama · BERT · LoRA / QLoRA · PyTorch · Hugging Face · XGBoost
-evals:      RAGAS · DeepEval · LangSmith · LLM-as-judge · A/B testing · drift detection
-shipping:   FastAPI · Docker · AWS (SageMaker, Bedrock, Lambda, S3) · MLflow · GitHub Actions
-stack:      Python · TypeScript · SQL · PySpark · Next.js · Postgres · Databricks · Snowflake
-```
+**Stack:** LangGraph · CrewAI · MCP · RAG (hybrid BM25 + dense, reranking) · Qdrant · FAISS · ChromaDB · Pinecone · Claude · GPT · Llama · BERT · LoRA / QLoRA · PyTorch · Hugging Face · XGBoost · RAGAS · DeepEval · LangSmith · FastAPI · Docker · AWS (SageMaker, Bedrock, Lambda, S3) · MLflow · GitHub Actions · Python · TypeScript · SQL · PySpark · Databricks · Snowflake · Postgres
 
 **Education:** MS Data Analytics, The George Washington University (2026) · B.Tech Computer Science, Dayananda Sagar University (2024)
+
+</details>
 
 ---
 

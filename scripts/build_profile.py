@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from profile_engine import cards, latent, metrics, readme, site  # noqa: E402
+from profile_engine import cards, latent, metrics, readme, site, story  # noqa: E402
 from profile_engine.github import fetch  # noqa: E402
 
 ASSETS = ROOT / "assets"
@@ -40,6 +40,8 @@ def render(m: metrics.Metrics, config: dict) -> tuple[dict[str, str], dict[str, 
         files[f"latent-space-{mode}.svg"] = cards.latent_map(points, clusters, m, mode)
         files[f"training-run-{mode}.svg"] = cards.training_run(m, mode)
         files[f"training-history-{mode}.svg"] = cards.training_history(m, mode)
+        files[f"career-{mode}.svg"] = story.career_graph(config, mode)
+        files[f"stack-{mode}.svg"] = story.stack_pipeline(config, mode)
     return files, readme.sections(m, points, clusters), site.build(m, points, clusters, config)
 
 

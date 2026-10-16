@@ -13,17 +13,23 @@ summary = "I build production LLM systems: retrieval, multi-agent pipelines, and
 linkedin = "https://www.linkedin.com/in/uvnikhil"
 email = "nikhilreddyulindala@gmail.com"
 
-# Shown by the `experience`, `stack` and `education` commands on the live site.
+# Shown by the `experience`, `stack` and `education` commands on the live site,
+# and drawn as the career `git log --graph` card. `start` orders the commits;
+# `impact` becomes the green diff chips (keep each under ~30 characters).
 [[experience]]
 when = "Sep 2026 – now"
+start = "2026-09"
 role = "Data Scientist"
 org = "Echelon Insights"
+impact = []
 notes = []
 
 [[experience]]
 when = "Jan 2025 – Aug 2026"
+start = "2025-01"
 role = "AI Engineer"
-org = "Milken Institute School of Public Health, GWU"
+org = "Milken Institute SPH, GWU"
+impact = ["RAGAS relevancy 0.61 → 0.82", "macro-F1 0.68 → 0.84", "p95 latency 2.8 s → 1.4 s", "11 months in production"]
 notes = [
   "Hybrid BM25 + embedding retrieval with cross-encoder reranking over 15K records (RAGAS relevancy 0.61 → 0.82)",
   "Fine-tuned BERT classifier (macro-F1 0.68 → 0.84)",
@@ -32,8 +38,10 @@ notes = [
 
 [[experience]]
 when = "Aug – Dec 2024"
+start = "2024-08"
 role = "Data Science Consultant"
 org = "Data Science for Sustainable Development"
+impact = ["1,200 mismatches caught", "study prep 2 days → 4 h", "reporting 6 h → <2 h"]
 notes = [
   "FAISS semantic search across JSON, CSV and Parquet surfaced ~1,200 mismatched records",
   "PySpark feature pipelines on Databricks cut study prep from two days to four hours",
@@ -41,8 +49,10 @@ notes = [
 
 [[experience]]
 when = "May 2023 – May 2024"
+start = "2023-05"
 role = "Data Scientist, Conversational AI"
 org = "Cogno AI (acquired by Exotel)"
+impact = ["macro-F1 0.71 → 0.86", "top-3 relevance 62% → 84%", "380 ms p95 serving"]
 notes = [
   "Intent classification across 40+ banking intents (macro-F1 0.71 → 0.86)",
   "Agent-assist retrieval over 10K documents (top-3 relevance 62% → 84%)",
@@ -61,11 +71,26 @@ languages = "Python · TypeScript · SQL · PySpark · Next.js · Postgres · Da
 degree = "MS Data Analytics"
 school = "The George Washington University"
 year = "2026"
+start = "2024-08"
+end = "2026-05"
+branch = "ms-data-analytics"
 
 [[education]]
 degree = "B.Tech Computer Science"
 school = "Dayananda Sagar University"
 year = "2024"
+start = "2020-12"
+end = "2024-06"
+branch = "btech-cse"
+
+# The stack card: stages in the order data flows through a system I ship.
+[pipeline]
+data = ["Python", "SQL", "PySpark", "Databricks", "Snowflake", "Postgres"]
+retrieval = ["BM25 + dense", "reranking", "Qdrant", "FAISS", "ChromaDB", "chunking"]
+models = ["Claude", "GPT", "Llama", "BERT", "LoRA / QLoRA", "PyTorch"]
+agents = ["LangGraph", "CrewAI", "MCP", "tool calling", "human-in-loop", "guardrails"]
+evals = ["RAGAS", "DeepEval", "LangSmith", "LLM-as-judge", "A/B tests", "drift detection"]
+ship = ["FastAPI", "Docker", "SageMaker", "Bedrock", "MLflow", "GH Actions"]
 
 [projects]
 # Pinned at the top of the README with hand-written copy; the auto list skips them.
