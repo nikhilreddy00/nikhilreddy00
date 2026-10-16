@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
-from .latent import Cluster, Point
-from .metrics import Metrics, Repo
+if TYPE_CHECKING:  # keep this module importable without numpy (the agent workflow)
+    from .latent import Cluster, Point
+    from .metrics import Metrics, Repo
 
 BAR_WIDTH = 16
 
