@@ -1,0 +1,45 @@
+name: Profile agent
+
+# Visitors run a command by opening an issue titled "agent: <command>".
+# The agent replies, closes and locks the issue, and logs the run in README.md.
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  respond:
+    if: contains(github.event.issue.title, 'agent:') || contains(github.event.issue.title, 'Agent:') || contains(github.event.issue.title, 'AGENT:')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Answer the command
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Passed as data via env, never interpolated into the script.
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+        run: python scripts/agent.py respond
+
+      - name: Save the session log
+        run: |
+          git add README.md
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Log profile agent run"
+          for i in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((i * 3))
+          done
+          exit 1
