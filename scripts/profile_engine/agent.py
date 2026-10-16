@@ -14,6 +14,7 @@ import urllib.parse
 
 SITE = "https://nikhilreddy00.github.io/nikhilreddy00/"
 TITLE = re.compile(r"^\s*agent\s*:\s*(.*)$", re.I)
+SAFE_LOGIN = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}")  # GitHub's username rules
 SPARK = "▁▂▃▄▅▆▇█"
 
 # command -> (description, example)
@@ -205,7 +206,7 @@ def sessions_section(issues: list[dict], data: dict, repo_slug: str, limit: int 
     runs = []
     for it in issues:
         parsed = parse(it["title"], data)
-        if parsed is None:
+        if parsed is None or not SAFE_LOGIN.fullmatch(it["user"] or ""):
             continue
         runs.append((it["user"], display(*parsed), it["created_at"]))
     if not runs:

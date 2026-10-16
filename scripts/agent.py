@@ -26,7 +26,9 @@ from profile_engine import agent  # noqa: E402
 from profile_engine.readme import replace_section  # noqa: E402
 
 LABEL = "agent"
-DAILY_LIMIT = 5
+DAILY_LIMIT = 5          # runs per visitor per 24 h
+HOURLY_CAP = 30          # runs per hour across everyone (stops floods from many accounts)
+MIN_ACCOUNT_DAYS = 14    # brand-new accounts are the usual spam source
 
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
 REPO = os.environ.get("GITHUB_REPOSITORY", "nikhilreddy00/nikhilreddy00")
@@ -88,10 +90,29 @@ def update_readme(just_answered: dict | None = None) -> None:
     path.write_text(replace_section(path.read_text(), "agent", agent.sessions_section(issues, data, REPO)))
 
 
+def decline(number: int, reason: str, public_note: str) -> None:
+    """Close without running anything and without logging the visitor."""
+    api("POST", f"/repos/{REPO}/issues/{number}/comments", {"body": public_note})
+    api("PATCH", f"/repos/{REPO}/issues/{number}", {"state": "closed", "state_reason": "not_planned"})
+    api("PUT", f"/repos/{REPO}/issues/{number}/lock", {"lock_reason": "resolved"}, ok=(204,))
+    print(f"Declined #{number}: {reason}")
+
+
+def blocked_users() -> set[str]:
+    try:
+        import tomllib
+        cfg = tomllib.loads((ROOT / "profile.toml").read_text())
+        return {u.lower() for u in cfg.get("agent", {}).get("blocked_users", [])}
+    except Exception:
+        return set()
+
+
 def respond() -> None:
     number = int(os.environ["ISSUE_NUMBER"])
-    title = os.environ.get("ISSUE_TITLE", "")
+    title = os.environ.get("ISSUE_TITLE", "")[:200]
     user = os.environ["ISSUE_AUTHOR"]
+    user_type = os.environ.get("ISSUE_AUTHOR_TYPE", "User")
+    owner = REPO.split("/")[0].lower()
     data = json.loads((ROOT / "site" / "data.json").read_text())
 
     parsed = agent.parse(title, data)
@@ -99,21 +120,30 @@ def respond() -> None:
         print("Not an agent issue; nothing to do.")
         return
     cmd, args = parsed
+    later = f"Thanks for stopping by. The [interactive terminal]({agent.SITE}#terminal) works for everyone."
 
-    # Fair use: a few runs per visitor per day keeps the log readable.
-    since = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=1)
-    recent = [i for i in agent_issues() if i["user"].lower() == user.lower()
-              and dt.datetime.fromisoformat(i["created_at"].replace("Z", "+00:00")) > since]
+    # Guards, cheapest first. None of them run anything the visitor wrote.
+    if user_type != "User" or not agent.SAFE_LOGIN.fullmatch(user):
+        return decline(number, f"non-user author {user!r}", "This agent only answers people, not bots or apps.")
+    if user.lower() in blocked_users():
+        return decline(number, f"blocked user {user}", later)
+    if user.lower() != owner:
+        profile = api("GET", f"/users/{user}")
+        created = dt.datetime.fromisoformat(profile["created_at"].replace("Z", "+00:00"))
+        if dt.datetime.now(dt.timezone.utc) - created < dt.timedelta(days=MIN_ACCOUNT_DAYS):
+            return decline(number, "account too new", f"This agent answers accounts older than {MIN_ACCOUNT_DAYS} days. {later}")
+
+    now = dt.datetime.now(dt.timezone.utc)
+    history = agent_issues()
+    stamp = lambda i: dt.datetime.fromisoformat(i["created_at"].replace("Z", "+00:00"))
+    if user.lower() != owner:
+        mine = [i for i in history if i["user"].lower() == user.lower() and now - stamp(i) < dt.timedelta(days=1)]
+        if len(mine) >= DAILY_LIMIT:
+            return decline(number, "daily limit", f"You've run {DAILY_LIMIT} commands in the last 24 hours, the daily limit here. {later}")
+        if sum(1 for i in history if now - stamp(i) < dt.timedelta(hours=1)) >= HOURLY_CAP:
+            return decline(number, "hourly cap", f"The agent is busy right now. {later}")
 
     api("POST", f"/repos/{REPO}/labels", {"name": LABEL, "color": "39c5bb", "description": "Profile agent runs"}, ok=(422,))
-    if len(recent) >= DAILY_LIMIT and user.lower() != REPO.split("/")[0].lower():
-        reply = (f"You've run {DAILY_LIMIT} commands in the last 24 hours, which is the daily limit here. "
-                 f"The [interactive terminal]({agent.SITE}#terminal) has no limit. Try it there.")
-        api("POST", f"/repos/{REPO}/issues/{number}/comments", {"body": reply})
-        api("PATCH", f"/repos/{REPO}/issues/{number}", {"state": "closed", "state_reason": "not_planned"})
-        api("PUT", f"/repos/{REPO}/issues/{number}/lock", {"lock_reason": "resolved"}, ok=(204,))
-        print(f"Rate-limited @{user}")
-        return
 
     excerpt = readme_excerpt(args[0]) if cmd == "cat" and args else None
     reply = agent.respond(cmd, args, data, user, REPO, excerpt)

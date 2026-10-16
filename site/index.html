@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Nikhil Reddy · Agent OS</title>
 <meta name="description" content="Interactive, live profile of Nikhil Reddy, AI Engineer: a terminal you can type in, a draggable map of projects, and a dashboard of real GitHub activity.">
 <meta property="og:title" content="Nikhil Reddy · Agent OS">
@@ -12,10 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="css/app.css">
-<script>
-  // Apply a saved theme before first paint.
-  try { const t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
-</script>
+<script src="js/theme-init.js"></script>
 </head>
 <body>
 <header class="top">
@@ -96,7 +95,7 @@
   <a href="https://github.com/nikhilreddy00/nikhilreddy00">Source</a>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

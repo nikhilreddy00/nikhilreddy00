@@ -95,3 +95,7 @@ top = 5
 "Document Q&A" = ["pdf", "question", "answering", "langchain", "chatbot", "qa"]
 "Classical ML" = ["regression", "classification", "xgboost", "churn", "prediction", "mnist", "forest", "premium", "neural"]
 "Data analytics" = ["analysis", "insights", "eda", "dashboard", "consumption", "pricing", "taxi", "loan", "electricity"]
+
+[agent]
+# Usernames the profile agent ignores (their runs are declined and never logged).
+blocked_users = []
