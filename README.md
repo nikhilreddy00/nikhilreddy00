@@ -63,7 +63,7 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:clusters:start-->
 | Cluster | Repos | Strongest terms |
 | :-- | :-- | :-- |
-| **Classical ML** | [Customer-Churn-Prediction](https://github.com/nikhilreddy00/Customer-Churn-Prediction), [HealthInsurance-PremiumPrediction](https://github.com/nikhilreddy00/HealthInsurance-PremiumPrediction), [LinearRegression](https://github.com/nikhilreddy00/LinearRegression) | `customer` · `linear` · `regression` · `eda` · `customers` · `random` |
+| **Classical ML** | [Customer-Churn-Prediction](https://github.com/nikhilreddy00/Customer-Churn-Prediction), [HealthInsurance-PremiumPrediction](https://github.com/nikhilreddy00/HealthInsurance-PremiumPrediction), [LinearRegression](https://github.com/nikhilreddy00/LinearRegression) | `customer` · `regression` · `linear` · `eda` · `customers` · `random` |
 | **Data analytics** | [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork), [Loan-Performance-Data-Insights](https://github.com/nikhilreddy00/Loan-Performance-Data-Insights), [SEC-Corporate-Filings-Insights](https://github.com/nikhilreddy00/SEC-Corporate-Filings-Insights), [Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics](https://github.com/nikhilreddy00/Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics), [NYSO-Electricity-Consumption-and-Pricing-Insights](https://github.com/nikhilreddy00/NYSO-Electricity-Consumption-and-Pricing-Insights) | `learning` · `insights` · `big` · `machine` · `loan` · `models` |
 | **Agentic RAG** | [sec-finance-rag](https://github.com/nikhilreddy00/sec-finance-rag), [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag), [Metadata-Aware-Rag](https://github.com/nikhilreddy00/Metadata-Aware-Rag), [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa), [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | `rag` · `chunks` · `sec` · `langchain` · `vector` · `retrieval` |
 | **Health AI** | [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API), [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | `drug` · `pubmed` · `safety` · `pharmacovigilance` · `fda` · `assessment` |
@@ -159,4 +159,4 @@ stack:      Python · TypeScript · SQL · PySpark · Next.js · Postgres · Dat
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 04:12 UTC<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 04:14 UTC<!--live:updated:end--></sub>
