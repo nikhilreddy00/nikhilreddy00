@@ -110,7 +110,7 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 | [**student-mental-health-ews**](https://github.com/nikhilreddy00/student-mental-health-ews) | 🎓 AI-powered early warning system detecting struggling university students weeks before crisis… | Jupyter Notebook | Aug 22, 2026 |
 | [**outbound-clinic-voice-agent**](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | AI voice agent that calls patients after hospital discharge, screens for warning signs, and… | Python | Aug 02, 2026 |
 | [**mirofish-meta-layoffs**](https://github.com/nikhilreddy00/mirofish-meta-layoffs) | AI-powered multi-agent simulation of Meta's April 2026 layoffs — 26 stakeholder agents, 720… | Python | May 01, 2026 |
-| [**sec-finance-rag**](https://github.com/nikhilreddy00/sec-finance-rag) | Production RAG chatbot over 25,000+ SEC EDGAR filings (S&P 500) — Claude · BGE · Hybrid BM25+Dense… | HTML | Apr 28, 2026 |
+| [**sec-finance-rag**](https://github.com/nikhilreddy00/sec-finance-rag) | Production RAG chatbot over 25,000+ SEC EDGAR filings (S&amp;P 500) — Claude · BGE · Hybrid BM25+Dense… | HTML | Apr 28, 2026 |
 <!--live:recent:end-->
 
 ### Training run
@@ -196,4 +196,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 04:55 UTC<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 05:14 UTC<!--live:updated:end--></sub>
