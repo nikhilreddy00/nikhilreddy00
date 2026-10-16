@@ -278,7 +278,7 @@ def readme_outside_agent(readme: str) -> str:
     return re.sub(r"<!--live:agent:start-->.*?<!--live:agent:end-->", "", readme, flags=re.S)
 
 
-ROW = re.compile(r"^\| \[@([A-Za-z0-9-]{1,39})\]\(https://github\.com/\1\) \| `([a-z0-9 ()-]+)` \| \d{4}-\d\d-\d\d \d\d:\d\d \|$")
+ROW = re.compile(r"^\| \[@([A-Za-z0-9-]{1,39})\]\(https://github\.com/\1\) \| `([a-z0-9 ()-]+)` \| \d{4}-\d\d-\d\d \d\d:\d\d(?: [A-Z]{2,5})? \|$")
 ALLOWED_SHOWN = re.compile(r"^(?:whoami|ls|cat(?: [A-Za-z0-9._-]+)?|stats (?:30|90|365)|langs|clusters|stack|experience|"
                            r"contact|random|neofetch|help|sudo hire nikhil|\(unknown command\))$")
 

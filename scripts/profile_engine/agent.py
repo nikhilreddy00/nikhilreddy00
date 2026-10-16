@@ -12,6 +12,8 @@ import random
 import re
 import urllib.parse
 
+from .clock import stamp
+
 SITE = "https://nikhilreddy00.github.io/nikhilreddy00/"
 TITLE = re.compile(r"^\s*agent\s*:\s*(.*)$", re.I)
 SAFE_LOGIN = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}")  # GitHub's username rules
@@ -152,7 +154,7 @@ def respond(cmd: str, args: list[str], data: dict, user: str, repo_slug: str,
         best = max(days, key=lambda d: d[1]) if days else None
         weeks = [sum(c for _, c in days[max(0, i - 7):i]) for i in range(len(days), 0, -7)][::-1]
         peak = max(weeks + [1])
-        body = [f"last {n} days (data as of {data['generated_at'][:16].replace('T', ' ')} UTC)",
+        body = [f"last {n} days (data as of {stamp(data['generated_at'], data.get('timezone'))})",
                 f"{'contributions':<18}{total}", f"{'active days':<18}{active} / {len(days)}",
                 f"{'longest streak':<18}{longest} day{'s' if longest != 1 else ''}"]
         if best and best[1]:
@@ -217,7 +219,7 @@ def sessions_section(issues: list[dict], data: dict, repo_slug: str, limit: int 
     count = max(total or 0, len(runs))
     plus = "+" if truncated else ""
     out = [f"**{count:,} command{'s' if count != 1 else ''}** run by **{visitors:,}{plus} visitor{'s' if visitors != 1 or plus else ''}** so far. Latest:", "",
-           "| Visitor | Ran | When (UTC) |", "| :-- | :-- | :-- |"]
+           "| Visitor | Ran | When |", "| :-- | :-- | :-- |"]
     for user, shown, at in runs[:limit]:
-        out.append(f"| [@{user}](https://github.com/{user}) | `{shown}` | {at[:16].replace('T', ' ')} |")
+        out.append(f"| [@{user}](https://github.com/{user}) | `{shown}` | {stamp(at, data.get('timezone'))} |")
     return "\n".join(out)

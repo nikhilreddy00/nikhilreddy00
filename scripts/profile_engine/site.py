@@ -41,6 +41,7 @@ def build(m: Metrics, points: list[Point], clusters: list[Cluster], config: dict
     data = {
         "generated_at": m.generated_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "login": m.login,
+        "timezone": config.get("timezone", "America/New_York"),
         "identity": config["identity"],
         "experience": config.get("experience", []),
         "stack": config.get("stack", {}),

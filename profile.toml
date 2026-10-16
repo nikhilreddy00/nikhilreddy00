@@ -3,6 +3,8 @@
 # live sections of README.md.
 
 login = "nikhilreddy00"
+# Times shown on the profile, the site and agent replies (daylight saving handled).
+timezone = "America/New_York"
 
 [identity]
 name = "Nikhil Reddy"

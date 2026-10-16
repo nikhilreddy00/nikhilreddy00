@@ -37,7 +37,7 @@ def render(m: metrics.Metrics, config: dict) -> tuple[dict[str, str], dict[str, 
     points, clusters = latent.embed(m.public_repos, config["latent_space"]["labels"])
     files = {}
     for mode in ("dark", "light"):
-        files[f"agent-trace-{mode}.svg"] = cards.agent_trace(m, config["identity"], mode)
+        files[f"agent-trace-{mode}.svg"] = cards.agent_trace(m, config["identity"], mode, config.get("timezone"))
         files[f"latent-space-{mode}.svg"] = cards.latent_map(points, clusters, m, mode)
         files[f"training-run-{mode}.svg"] = cards.training_run(m, mode)
         files[f"training-history-{mode}.svg"] = cards.training_history(m, mode)
@@ -97,7 +97,7 @@ def main() -> int:
     SITE_DATA.write_text(data)
     readme_path = ROOT / "README.md"
     from profile_engine import readme
-    readme_path.write_text(readme.update(readme_path.read_text(), m, live))
+    readme_path.write_text(readme.update(readme_path.read_text(), m, live, config.get("timezone")))
     FINGERPRINT.write_text(fp + "\n")
     print("Profile updated.")
     return 0

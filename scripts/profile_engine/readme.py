@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING
 
+from .clock import stamp
+
 if TYPE_CHECKING:  # keep this module importable without numpy (the agent workflow)
     from .latent import Cluster, Point
     from .metrics import Metrics, Repo
@@ -87,7 +89,7 @@ def replace_section(readme: str, name: str, content: str) -> str:
     return pattern.sub(lambda mt: mt.group(1) + body + mt.group(3), readme)
 
 
-def update(readme: str, m: Metrics, live: dict[str, str]) -> str:
+def update(readme: str, m: Metrics, live: dict[str, str], tz: str | None = None) -> str:
     for name, content in live.items():
         readme = replace_section(readme, name, content)
-    return replace_section(readme, "updated", f"{m.generated_at:%Y-%m-%d %H:%M} UTC")
+    return replace_section(readme, "updated", stamp(m.generated_at, tz))

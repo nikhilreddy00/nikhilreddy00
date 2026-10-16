@@ -12,6 +12,7 @@ import datetime as dt
 import math
 import re
 
+from .clock import stamp
 from .latent import Cluster, Point
 from .metrics import Metrics
 from .svg import CATEGORICAL, PALETTES, document, esc, text, text_width
@@ -43,7 +44,7 @@ def _pc(v: float) -> str:
 # A. Agent trace (hero) — retypes itself every cycle
 # --------------------------------------------------------------------------
 
-def agent_trace(m: Metrics, identity: dict, mode: str) -> str:
+def agent_trace(m: Metrics, identity: dict, mode: str, tz: str | None = None) -> str:
     p = PALETTES[mode]
     tool, arrow = ("blue", "⚙ tool    "), ("muted", "  ↳ ")
     lines: list[list[tuple[str, str]]] = [
@@ -65,7 +66,7 @@ def agent_trace(m: Metrics, identity: dict, mode: str) -> str:
          ("fg", " active days · ")] + _streak_segments(m),
         [tool, ("fg", 'github.languages(by="bytes")')],
         [arrow, ("fg", " · ".join(f"{n} {_pct(s)}" for n, _, s in m.languages[:3] if n != "Other") or "—")],
-        [("green", "✓ done    "), ("muted", f"updated {m.generated_at:%Y-%m-%d %H:%M} UTC · next check within the hour")],
+        [("green", "✓ done    "), ("muted", f"updated {stamp(m.generated_at, tz)} · next check within the hour")],
     ]
 
     size, lh, top = 13.5, 23, 64
