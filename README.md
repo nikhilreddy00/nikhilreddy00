@@ -32,11 +32,11 @@ Run a command on my profile agent without leaving GitHub. Click one, then **Crea
 <!--live:agent:start-->
 **3 commands** run by **1 visitor** so far. Latest:
 
-| Visitor | Ran | When (UTC) |
+| Visitor | Ran | When |
 | :-- | :-- | :-- |
-| [@nikhilreddy00](https://github.com/nikhilreddy00) | `help` | 2026-10-16 05:15 |
-| [@nikhilreddy00](https://github.com/nikhilreddy00) | `stats 90` | 2026-10-16 04:36 |
-| [@nikhilreddy00](https://github.com/nikhilreddy00) | `whoami` | 2026-10-16 04:34 |
+| [@nikhilreddy00](https://github.com/nikhilreddy00) | `help` | 2026-10-16 01:15 EDT |
+| [@nikhilreddy00](https://github.com/nikhilreddy00) | `stats 90` | 2026-10-16 00:36 EDT |
+| [@nikhilreddy00](https://github.com/nikhilreddy00) | `whoami` | 2026-10-16 00:34 EDT |
 <!--live:agent:end-->
 
 <sub>Commands only, a few per visitor per day. Want to type freely? Use the <a href="https://nikhilreddy00.github.io/nikhilreddy00/#terminal">interactive terminal</a>.</sub>
@@ -146,15 +146,15 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 | Repository | Commits · 12 mo | Share |
 | :-- | --: | :-- |
 | [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `████████████████` 21% |
-| [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `██████████░░░░░░` 12% |
 | [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `██████████░░░░░░` 12% |
+| [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `██████████░░░░░░` 12% |
 | [praxis](https://github.com/nikhilreddy00/praxis) | 3 | `██████████░░░░░░` 12% |
 | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent) | 2 | `██████░░░░░░░░░░` 8% |
 | [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork) | 2 | `██████░░░░░░░░░░` 8% |
+| [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
 | [mirofish-meta-layoffs](https://github.com/nikhilreddy00/mirofish-meta-layoffs) | 1 | `███░░░░░░░░░░░░░` 4% |
 | [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | 1 | `███░░░░░░░░░░░░░` 4% |
 | [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag) | 1 | `███░░░░░░░░░░░░░` 4% |
-| [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
 | [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API) | 1 | `███░░░░░░░░░░░░░` 4% |
 | [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
 
@@ -197,4 +197,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 08:14 UTC<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 12:02 EDT<!--live:updated:end--></sub>
