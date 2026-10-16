@@ -2,7 +2,7 @@
 // Drag a bubble and a spring pulls it back to where its meaning puts it
 // (or "pin where dropped" keeps it). Zoom, pan, hover, click for details.
 
-import { $, h, ago, clusterColor, emit, hideTip, on, showTip } from "./util.js";
+import { $, h, ago, clusterColor, emit, hideTip, on, safeUrl, showTip } from "./util.js";
 
 export function createMap(data) {
   const svgEl = $("#map-svg"), drawer = $("#map-drawer"), legendEl = $("#map-legend");
@@ -134,7 +134,7 @@ export function createMap(data) {
       d.topics?.length ? h("div", { class: "tags" }, ...d.topics.map((t) => h("span", {}, `#${t}`))) : null,
       cl ? h("div", { class: "meta" }, h("span", {}, `cluster: ${cl.label}`), h("span", {}, cl.terms.slice(0, 4).join(" · "))) : null,
       h("div", { class: "row" },
-        h("a", { class: "btn", href: d.url, target: "_blank", rel: "noopener" }, "Open on GitHub ↗"),
+        h("a", { class: "btn", href: safeUrl(d.url), target: "_blank", rel: "noopener" }, "Open on GitHub ↗"),
         h("button", { class: "btn", type: "button", onclick: () => { location.hash = "#terminal"; emit("terminal-run", `cat ${d.name}`); } }, "Read README")),
     );
     drawer.hidden = false;

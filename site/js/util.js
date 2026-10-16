@@ -18,6 +18,14 @@ export function h(tag, attrs = {}, ...children) {
   return el;
 }
 
+// Links built from data only ever use web or mail schemes (defence in depth beside the CSP).
+export function safeUrl(url) {
+  try {
+    const u = new URL(String(url), location.href);
+    return ["https:", "http:", "mailto:"].includes(u.protocol) ? u.href : "#";
+  } catch (e) { return "#"; }
+}
+
 export const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 export const clusterColor = (id) => cssVar(`--s${(id % 8) + 1}`);
 

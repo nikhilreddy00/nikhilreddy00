@@ -1,7 +1,7 @@
 // The terminal: a small shell over the profile data, live GitHub events and
 // repos' READMEs. Output is built from DOM nodes (textContent only).
 
-import { $, h, ago, emit, fmtNum, fmtShort, levenshtein, parseDay, sliceStats } from "./util.js";
+import { $, h, ago, emit, fmtNum, fmtShort, levenshtein, parseDay, safeUrl, sliceStats } from "./util.js";
 import { describe, poll } from "./live.js";
 
 const SPARK = "▁▂▃▄▅▆▇█";
@@ -19,7 +19,7 @@ export function createTerminal(data) {
   const span = (cls, text) => h("span", { class: cls }, text);
   const link = (text, fn, title) => h("button", { class: "t-link", type: "button", onclick: fn, title }, text);
   const cmdLink = (text, cmd) => link(text, () => run(cmd), `run: ${cmd}`);
-  const ext = (text, url) => h("a", { class: "t-link", href: url, target: "_blank", rel: "noopener" }, text);
+  const ext = (text, url) => h("a", { class: "t-link", href: safeUrl(url), target: "_blank", rel: "noopener" }, text);
   const scroll = () => { body.scrollTop = body.scrollHeight; };
   function print(...segs) {
     const ln = h("div", { class: "ln" }, ...segs.map((s) => (typeof s === "string" ? s : s)));
@@ -100,7 +100,7 @@ export function createTerminal(data) {
     open: { desc: "open a repo, linkedin, github or email", example: "open praxis", run(args) {
       const t = (args[0] || "").toLowerCase();
       const id = data.identity;
-      const go = (url, label) => { window.open(url, "_blank", "noopener"); print(span("t-mut", "opening "), ext(label, url)); };
+      const go = (url, label) => { if (safeUrl(url) === "#") return err("blocked: not a web link"); window.open(safeUrl(url), "_blank", "noopener"); print(span("t-mut", "opening "), ext(label, url)); };
       if (t === "linkedin") return go(id.linkedin, "LinkedIn");
       if (t === "github") return go(`https://github.com/${login}`, `github.com/${login}`);
       if (t === "email" || t === "mail") return print(span("t-mut", "email: "), ext(id.email, `mailto:${id.email}`));

@@ -90,6 +90,34 @@ def update_readme(just_answered: dict | None = None) -> None:
     path.write_text(replace_section(path.read_text(), "agent", agent.sessions_section(issues, data, REPO)))
 
 
+def agent_issues_since(hours: int, creator: str | None = None) -> list[dict]:
+    """Every `agent:` issue opened in the window, answered or not.
+
+    Counting in-flight issues (not just labelled ones) closes the race where a
+    burst of parallel runs each saw only the history from before the burst.
+    """
+    cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)
+    since = cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
+    who = f"&creator={creator}" if creator else ""
+    out, page = [], 1
+    while page <= 10:
+        batch = api("GET", f"/repos/{REPO}/issues?state=all&since={since}{who}&per_page=100&page={page}")
+        for i in batch:
+            created = dt.datetime.fromisoformat(i["created_at"].replace("Z", "+00:00"))
+            if "pull_request" not in i and created >= cutoff and agent.TITLE.match(i["title"] or ""):
+                out.append({"number": i["number"], "user": i["user"]["login"]})
+        if len(batch) < 100:
+            break
+        page += 1
+    return out
+
+
+def rank(issues: list[dict], number: int) -> int:
+    """1-based position of this issue among the window's issues, oldest first."""
+    numbers = sorted({i["number"] for i in issues} | {number})
+    return numbers.index(number) + 1
+
+
 def decline(number: int, reason: str, public_note: str) -> None:
     """Close without running anything and without logging the visitor."""
     api("POST", f"/repos/{REPO}/issues/{number}/comments", {"body": public_note})
@@ -133,14 +161,12 @@ def respond() -> None:
         if dt.datetime.now(dt.timezone.utc) - created < dt.timedelta(days=MIN_ACCOUNT_DAYS):
             return decline(number, "account too new", f"This agent answers accounts older than {MIN_ACCOUNT_DAYS} days. {later}")
 
-    now = dt.datetime.now(dt.timezone.utc)
-    history = agent_issues()
-    stamp = lambda i: dt.datetime.fromisoformat(i["created_at"].replace("Z", "+00:00"))
     if user.lower() != owner:
-        mine = [i for i in history if i["user"].lower() == user.lower() and now - stamp(i) < dt.timedelta(days=1)]
-        if len(mine) >= DAILY_LIMIT:
+        # Deterministic under bursts: every parallel run ranks the same issue list
+        # by issue number, so exactly the first N in each window get answered.
+        if rank(agent_issues_since(24, creator=user), number) > DAILY_LIMIT:
             return decline(number, "daily limit", f"You've run {DAILY_LIMIT} commands in the last 24 hours, the daily limit here. {later}")
-        if sum(1 for i in history if now - stamp(i) < dt.timedelta(hours=1)) >= HOURLY_CAP:
+        if rank(agent_issues_since(1), number) > HOURLY_CAP:
             return decline(number, "hourly cap", f"The agent is busy right now. {later}")
 
     api("POST", f"/repos/{REPO}/labels", {"name": LABEL, "color": "39c5bb", "description": "Profile agent runs"}, ok=(422,))

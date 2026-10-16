@@ -2,7 +2,7 @@
 // table below it (Power BI-style cross-filtering). Language clicks filter
 // the project table. Every mark has a hover tooltip.
 
-import { $, h, ago, cssVar, fmtDay, fmtNum, fmtShort, hideTip, on, parseDay, showTip, sliceStats } from "./util.js";
+import { $, h, ago, cssVar, fmtDay, fmtNum, fmtShort, hideTip, on, parseDay, safeUrl, showTip, sliceStats } from "./util.js";
 import { describe, getEvents } from "./live.js";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -231,7 +231,7 @@ export function createDashboard(data) {
       onclick: () => sortBy(k), onkeydown: (e) => { if (e.key === "Enter") sortBy(k); },
     }, label)));
     const body = rows.map((r) => h("tr", {},
-      h("td", {}, h("a", { href: r.url, target: "_blank", rel: "noopener" }, r.name), r.description ? h("div", { class: "desc" }, r.description.length > 110 ? r.description.slice(0, 109) + "…" : r.description) : null),
+      h("td", {}, h("a", { href: safeUrl(r.url), target: "_blank", rel: "noopener" }, r.name), r.description ? h("div", { class: "desc" }, r.description.length > 110 ? r.description.slice(0, 109) + "…" : r.description) : null),
       h("td", {}, r.cluster != null ? h("span", { class: "dot", style: { background: `var(--s${(r.cluster % 8) + 1})` } }) : null, clusterName(r.cluster)),
       h("td", {}, h("span", { class: "dot", style: { background: r.color || "var(--faint)" } }), r.language || "—"),
       h("td", { class: "num" }, r.stars || ""),
