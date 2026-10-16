@@ -73,6 +73,17 @@ THEMES = {
     ),
 }
 
+# Aurora x Mesh: each card keeps its own hue (aurora) as the main bloom, with
+# mesh's pink and sky blooms in the other corners and a gradient accent bar.
+for _name, _light_op, _dark_op, _edge in (("aurora-mesh", 0.24, 0.26, 0.30), ("aurora-mesh-vivid", 0.36, 0.34, 0.50)):
+    THEMES[_name] = _theme(
+        _CLASSIC,
+        dark={"frame": "aurora-mesh", "panel": "#100f1b", "bg": "#0d0c16", "line": "#2c2942", "grid": "#1c1a2e",
+              "hues": _HUES["dark"], "blobs": ["#db2777", "#0ea5e9"], "blob_opacity": _dark_op, "edge_opacity": _edge},
+        light={"frame": "aurora-mesh", "panel": "#ffffff", "bg": "#ffffff", "line": "#e6e2f0", "grid": "#f0eef6",
+               "hues": _HUES["light"], "blobs": ["#f472b6", "#38bdf8"], "blob_opacity": _light_op, "edge_opacity": _edge},
+    )
+
 # Active palettes (cards read PALETTES[mode]); switch with set_theme().
 PALETTES = {mode: dict(v) for mode, v in THEMES["classic"].items()}
 
@@ -114,6 +125,21 @@ def frame(p: dict, w: float, h: float, key: str, rx: int = 12) -> str:
             for i, (cx, cy, r) in enumerate(spots))
         layers = "".join(f'<rect width="{w}" height="{h}" fill="url(#ms{i}-{key})" clip-path="url(#fr-{key})"/>' for i in range(3))
         return f'<defs>{clip}{grads}</defs>{base}{layers}{edge}'
+    if kind == "aurora-mesh":
+        hue = p["hues"][CARD_HUE.get(key, "teal")]
+        pink, sky = p["blobs"]
+        op = p["blob_opacity"]
+        spots = [(hue, 0.06, 0.0, 0.62, op * 1.15), (pink, 0.98, 0.12, 0.5, op * 0.75), (sky, 0.62, 1.08, 0.6, op * 0.8)]
+        grads = "".join(
+            f'<radialGradient id="am{i}-{key}" cx="{cx}" cy="{cy}" r="{r}">'
+            f'<stop offset="0" stop-color="{c}" stop-opacity="{o:.2f}"/><stop offset="1" stop-color="{c}" stop-opacity="0"/></radialGradient>'
+            for i, (c, cx, cy, r, o) in enumerate(spots))
+        bar = (f'<linearGradient id="amb-{key}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{hue}"/>'
+               f'<stop offset="0.6" stop-color="{pink}"/><stop offset="1" stop-color="{sky}"/></linearGradient>')
+        layers = "".join(f'<rect width="{w}" height="{h}" fill="url(#am{i}-{key})" clip-path="url(#fr-{key})"/>' for i in range(3))
+        return (f'<defs>{clip}{grads}{bar}</defs>{base}{layers}'
+                f'<rect width="{w}" height="4" fill="url(#amb-{key})" clip-path="url(#fr-{key})"/>'
+                f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="{rx}" fill="none" stroke="{hue}" stroke-opacity="{p["edge_opacity"]}"/>')
     return f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="{rx}" fill="{p["panel"]}" stroke="{p["line"]}"/>'
 
 
