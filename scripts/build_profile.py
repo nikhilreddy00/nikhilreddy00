@@ -33,7 +33,8 @@ FINGERPRINT = ASSETS / ".fingerprint"
 def render(m: metrics.Metrics, config: dict) -> tuple[dict[str, str], dict[str, str], str]:
     """Return (asset files, README live sections, site data)."""
     # Imported here so `--fetch-only` never loads numpy/third-party code next to a token.
-    from profile_engine import cards, latent, readme, site, story
+    from profile_engine import cards, latent, readme, site, story, svg
+    svg.set_theme(config.get("theme", "classic"))
     points, clusters = latent.embed(m.public_repos, config["latent_space"]["labels"])
     files = {}
     for mode in ("dark", "light"):

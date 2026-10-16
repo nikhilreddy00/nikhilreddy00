@@ -20,7 +20,11 @@ export function createMap(data) {
   const hidden = new Set();
   let W = 0, H = 0, query = "", selected = null, hoverCluster = null;
 
-  const anchor = (n) => ({ x: 70 + n.ex * (W - 140), y: 60 + (1 - n.ey) * (H - 120) });
+  // Where each cluster has been dragged to (px). Bubbles anchor to their
+  // embedding position plus their cluster's offset, so a moved cluster stays put.
+  const offset = new Map();
+  const shift = (id) => offset.get(id) || { dx: 0, dy: 0 };
+  const anchor = (n) => ({ x: 70 + n.ex * (W - 140) + shift(n.cluster).dx, y: 60 + (1 - n.ey) * (H - 120) + shift(n.cluster).dy });
 
   const sim = d3.forceSimulation(nodes)
     .force("x", d3.forceX((n) => anchor(n).x).strength(0.09))
@@ -75,6 +79,29 @@ export function createMap(data) {
   const hull = gHull.selectAll("path").data(data.clusters, (c) => c.id).join("path").attr("class", "hull");
   const hullLabel = gLabel.selectAll("text.hull-label").data(data.clusters, (c) => c.id).join("text")
     .attr("class", "hull-label").attr("text-anchor", "middle").text((c) => c.label);
+
+  // Drag a whole cluster by its shaded area or its name.
+  const clusterDrag = d3.drag()
+    .on("start", (e) => { if (!e.active) sim.alphaTarget(0.2).restart(); hideTip(); })
+    .on("drag", (e, c) => {
+      const o = shift(c.id);
+      offset.set(c.id, { dx: o.dx + e.dx, dy: o.dy + e.dy });
+      for (const n of nodes) {
+        if (n.cluster !== c.id) continue;
+        n.x += e.dx; n.y += e.dy;
+        if (n.fx != null) { n.fx += e.dx; n.fy += e.dy; }
+      }
+      ticked();
+    })
+    .on("end", (e) => { if (!e.active) sim.alphaTarget(0); });
+  hull.call(clusterDrag).style("cursor", "move");
+  hullLabel.call(clusterDrag).style("cursor", "move");
+  const clusterTip = (e, c) => showTip(e, c.label, [[`${nodes.filter((n) => n.cluster === c.id).length} repos · drag to move the cluster`], [c.terms.slice(0, 5).join(" · ")]]);
+  for (const sel of [hull, hullLabel]) {
+    sel.on("pointerenter", (e, c) => { hoverCluster = c.id; style(); clusterTip(e, c); })
+      .on("pointermove", clusterTip)
+      .on("pointerleave", () => { hoverCluster = null; style(); hideTip(); });
+  }
 
   function ticked() {
     node.attr("transform", (d) => `translate(${d.x},${d.y})`);
@@ -145,7 +172,7 @@ export function createMap(data) {
   svg.on("click", (e) => { if (e.target === svgEl) select(null); });
 
   function reset() {
-    hidden.clear(); query = ""; search.value = ""; pinBox.checked = false;
+    hidden.clear(); offset.clear(); query = ""; search.value = ""; pinBox.checked = false;
     for (const n of nodes) { n.fx = null; n.fy = null; }
     buildLegend(); select(null);
     svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity);

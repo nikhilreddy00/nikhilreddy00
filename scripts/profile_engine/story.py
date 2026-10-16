@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import hashlib
 
-from .svg import PALETTES, document, esc, text, text_width
+from .svg import PALETTES, document, esc, frame, text, text_width
 
 W = 880
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -68,12 +68,12 @@ def career_graph(config: dict, mode: str) -> str:
         y += h
     H = y + 6
 
-    body = [f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="12" fill="{p["panel"]}" stroke="{p["line"]}"/>',
+    body = [frame(p, W, H, "career"),
             text(24, 32, "career.git", p["fg"], 15, 700),
             text(24 + text_width("career.git  ", 15), 32, "git log --graph --oneline --decorate", p["muted"], 12),
-            text(W - 24, 32, "main     education", p["faint"], 11, anchor="end"),
-            f'<circle cx="{W - 24 - text_width("main     education", 11) - 9:.1f}" cy="28" r="4" fill="{main_c}"/>',
-            f'<circle cx="{W - 24 - text_width("education", 11) - 9:.1f}" cy="28" r="4" fill="{edu_c}"/>']
+            # Legend items placed one by one (SVG collapses repeated spaces).
+            f'<circle cx="{W - 170}" cy="28" r="4" fill="{main_c}"/>', text(W - 160, 32, "main", p["faint"], 11),
+            f'<circle cx="{W - 108}" cy="28" r="4" fill="{edu_c}"/>', text(W - 98, 32, "education", p["faint"], 11)]
 
     # Lines first (drawn under the nodes).
     ys = [r["y"] for r in lay]
@@ -159,7 +159,7 @@ def stack_pipeline(config: dict, mode: str) -> str:
     H = top + rows * (chip_h + chip_gap) + 30
     cycle = 7.0
 
-    body = [f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="12" fill="{p["panel"]}" stroke="{p["line"]}"/>',
+    body = [frame(p, W, H, "stack"),
             text(24, 32, "how I ship an AI system", p["fg"], 15, 700),
             text(24 + text_width("how I ship an AI system  ", 15), 32, "the stack, in the order data flows through it", p["muted"], 12)]
 

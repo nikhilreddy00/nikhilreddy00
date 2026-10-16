@@ -15,7 +15,7 @@ import re
 from .clock import stamp
 from .latent import Cluster, Point
 from .metrics import Metrics
-from .svg import CATEGORICAL, PALETTES, document, esc, text, text_width
+from .svg import CATEGORICAL, PALETTES, document, esc, frame, text, text_width
 
 W = 880
 
@@ -79,7 +79,7 @@ def agent_trace(m: Metrics, identity: dict, mode: str, tz: str | None = None) ->
     cycle = t + 9.0  # hold the finished trace, then clear and retype
 
     body = [
-        f'<rect x="0.5" y="0.5" width="{W - 1}" height="{height - 1}" rx="12" fill="{p["panel"]}" stroke="{p["line"]}"/>',
+        frame(p, W, height, "trace"),
         f'<circle cx="22" cy="21" r="6" fill="{p["dot_red"]}"/><circle cx="42" cy="21" r="6" fill="{p["dot_yellow"]}"/>'
         f'<circle cx="62" cy="21" r="6" fill="{p["dot_green"]}"/>',
         text(W / 2, 25.5, f"{m.login}@agent: ~/profile", p["muted"], 12, anchor="middle"),
@@ -128,7 +128,7 @@ def latent_map(points: list[Point], clusters: list[Cluster], m: Metrics, mode: s
     n = len(points)
     color_of = {j: p[CATEGORICAL[j % len(CATEGORICAL)]] for j in range(len(clusters))}
 
-    body = [f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="12" fill="{p["bg"]}" stroke="{p["line"]}"/>',
+    body = [frame(p, W, H, "latent"),
             text(24, 32, "latent space", p["fg"], 15, 700),
             text(24 + text_width("latent space ", 15), 32,
                  f"{n} public repos, embedded from READMEs + topics, {len(clusters)} clusters", p["muted"], 12),
@@ -259,7 +259,7 @@ def training_run(m: Metrics, mode: str) -> str:
     p = PALETTES[mode]
     H = 360
     draw = 2.2  # seconds for the curve to draw
-    body = [f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="12" fill="{p["panel"]}" stroke="{p["line"]}"/>']
+    body = [frame(p, W, H, "run")]
 
     body.append(text(24, 34, f"run: {m.login}/career", p["fg"], 15, 700))
     body.append(text(24 + text_width(f"run: {m.login}/career  ", 15), 34,
@@ -375,7 +375,7 @@ def training_history(m: Metrics, mode: str) -> str:
     total = sum(c for _, c in year)
     active = sum(1 for _, c in year if c)
 
-    body = [f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="12" fill="{p["panel"]}" stroke="{p["line"]}"/>',
+    body = [frame(p, W, H, "history"),
             text(24, 34, "training history", p["fg"], 15, 700),
             text(24 + text_width("training history  ", 15), 34,
                  f"{total:,} contributions · {active} active days · last 12 months", p["muted"], 12)]

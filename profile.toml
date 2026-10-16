@@ -5,6 +5,8 @@
 login = "nikhilreddy00"
 # Times shown on the profile, the site and agent replies (daylight saving handled).
 timezone = "America/New_York"
+# Card look: classic | aurora | mesh | blueprint (each has a light and a dark version).
+theme = "classic"
 
 [identity]
 name = "Nikhil Reddy"

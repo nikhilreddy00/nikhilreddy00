@@ -134,7 +134,7 @@ main { max-width: 1240px; margin: 0 auto; padding-block: 20px 8px;
 .node { cursor: pointer; outline: none; }
 .node:focus-visible .dot { stroke: var(--fg) !important; stroke-width: 3px !important; }
 .node-label { font: 11px var(--mono); fill: var(--fg); pointer-events: none; paint-order: stroke; stroke: var(--panel); stroke-width: 3px; }
-.hull-label { font: 700 12px var(--mono); fill: var(--fg); pointer-events: none; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; }
+.hull-label { font: 700 12px var(--mono); fill: var(--fg); paint-order: stroke; stroke: var(--panel); stroke-width: 4px; user-select: none; }
 .drawer { position: absolute; top: 12px; right: 12px; width: min(340px, calc(100% - 24px)); max-height: calc(100% - 24px); overflow: auto;
   background: var(--raise); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 8px;
   box-shadow: 0 8px 24px rgba(0,0,0,.25); }
