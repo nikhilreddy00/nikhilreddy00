@@ -123,8 +123,10 @@ def _name_clusters(x, vocab, labels, k, label_rules: dict[str, list[str]]) -> li
     scores = np.zeros((k, len(label_rules)))
     names = list(label_rules)
     for j in range(k):
-        centroid = x[labels == j].mean(0)
-        top = [vocab[i] for i in np.argsort(centroid)[::-1][:12] if centroid[i] > 0]
+        centroid = np.round(x[labels == j].mean(0), 6)
+        # Ties broken alphabetically so reruns list the same terms in the same order.
+        order = sorted(range(len(vocab)), key=lambda i: (-centroid[i], vocab[i]))
+        top = [vocab[i] for i in order[:12] if centroid[i] > 0]
         clusters.append(Cluster(label="", terms=top, members=list(np.where(labels == j)[0])))
         for n, name in enumerate(names):
             kws = label_rules[name]
