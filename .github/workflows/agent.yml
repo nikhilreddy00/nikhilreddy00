@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   respond:
-    if: contains(github.event.issue.title, 'agent:') || contains(github.event.issue.title, 'Agent:') || contains(github.event.issue.title, 'AGENT:')
+    if: startsWith(github.event.issue.title, 'agent:') || startsWith(github.event.issue.title, 'Agent:') || startsWith(github.event.issue.title, 'AGENT:')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

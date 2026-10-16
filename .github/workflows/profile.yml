@@ -11,6 +11,7 @@ on:
       - "profile.toml"
       - "README.md"
       - "site/**"
+      - "requirements.txt"
       - ".github/workflows/profile.yml"
 
 permissions: {}
@@ -30,29 +31,37 @@ jobs:
       changed: ${{ steps.commit.outputs.changed }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.12"
-          cache: pip
 
-      - run: pip install -r requirements.txt
+      # Exact version, exact file hash, wheels only: no surprise code at install time.
+      - run: "pip install --require-hashes --only-binary=:all: -r requirements.txt"
 
-      - name: Fetch GitHub data and render
+      # The token only exists in steps that run our own, dependency-free code.
+      - name: Fetch GitHub data
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Optional: a read-only token of yours that can see private repos adds their languages.
-          PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
-        run: python scripts/build_profile.py
+        run: python scripts/build_profile.py --fetch-only "$RUNNER_TEMP/snapshot.json"
+
+      - name: Render cards, README and site data (no token)
+        run: python scripts/build_profile.py --snapshot "$RUNNER_TEMP/snapshot.json"
 
       - name: Refresh the agent session log
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/agent.py sessions
 
       - name: Commit if anything changed
         id: commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          rm -f "$RUNNER_TEMP/snapshot.json"
           git add assets README.md site/data.json
           if git diff --cached --quiet; then
             echo "Profile already up to date."
@@ -62,8 +71,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Refresh live profile"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git pull --rebase "$remote" main
+          git push "$remote" HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
   # Publish site/ (the interactive version) to GitHub Pages whenever the data
@@ -83,18 +93,24 @@ jobs:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
           ref: main
+          persist-credentials: false
+
+      # Refuse to publish if the CDN copy of d3 no longer matches the pinned hash.
+      - name: Verify d3 integrity hash
+        run: |
+          want=$(grep -o 'integrity="sha384-[^"]*"' site/index.html | cut -d'"' -f2)
+          got="sha384-$(curl -fsSL https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js | openssl dgst -sha384 -binary | openssl base64 -A)"
+          [ "$want" = "$got" ] || { echo "::error::d3 integrity mismatch ($want vs $got)"; exit 1; }
+
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: site
       - id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+
       - name: Check the live site responds
         run: |
-          # The d3 integrity hash in index.html must match what the CDN serves.
-          want=$(grep -o 'integrity="sha384-[^"]*"' site/index.html | cut -d'"' -f2)
-          got="sha384-$(curl -fsSL https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js | openssl dgst -sha384 -binary | openssl base64 -A)"
-          [ "$want" = "$got" ] || { echo "::error::d3 integrity mismatch ($want vs $got)"; exit 1; }
           for i in $(seq 1 12); do
             if curl -fsS "${{ steps.deployment.outputs.page_url }}data.json" -o /dev/null \
                && curl -fsS "${{ steps.deployment.outputs.page_url }}" | grep -q "Agent OS"; then

@@ -57,6 +57,13 @@ class Metrics:
         return any(c for _, c in self.days[-7:])
 
 
+HEX = __import__("re").compile(r"#[0-9a-fA-F]{3,8}")
+
+
+def _color(c: str | None, default: str = "#8b949e") -> str:
+    return c if c and HEX.fullmatch(c) else default
+
+
 def _ts(s: str) -> dt.datetime:
     return dt.datetime.fromisoformat(s.replace("Z", "+00:00"))
 
@@ -94,7 +101,7 @@ def compute(snapshot: dict, config: dict) -> Metrics:
             description=(r.get("description") or "").strip(),
             url=r["url"],
             language=lang.get("name"),
-            language_color=lang.get("color"),
+            language_color=_color(lang.get("color")) if lang.get("color") else None,
             stars=r["stargazerCount"],
             created=_ts(r["createdAt"]),
             pushed=_ts(r["pushedAt"]),
@@ -111,10 +118,12 @@ def compute(snapshot: dict, config: dict) -> Metrics:
 
     sizes: dict[str, list] = {}
     for r in owned:
+        if r["isPrivate"]:
+            continue  # even language names could hint at private work
         for l in r["languages"]:
             if l["name"] in lang_exclude:
                 continue
-            entry = sizes.setdefault(l["name"], [l["color"] or "#8b949e", 0])
+            entry = sizes.setdefault(l["name"], [_color(l["color"]), 0])
             entry[1] += l["size"]
     total = sum(v[1] for v in sizes.values()) or 1
     ranked = sorted(sizes.items(), key=lambda kv: kv[1][1], reverse=True)

@@ -201,18 +201,22 @@ def respond(cmd: str, args: list[str], data: dict, user: str, repo_slug: str,
             f"Run another: {links} · or type freely in the [interactive terminal]({SITE}#terminal).</sub>")
 
 
-def sessions_section(issues: list[dict], data: dict, repo_slug: str, limit: int = 6) -> str:
+def sessions_section(issues: list[dict], data: dict, repo_slug: str, limit: int = 6,
+                     blocked: set[str] | None = None, total: int | None = None, truncated: bool = False) -> str:
     """README block: totals plus the latest runs, newest first."""
+    blocked = blocked or set()
     runs = []
     for it in issues:
         parsed = parse(it["title"], data)
-        if parsed is None or not SAFE_LOGIN.fullmatch(it["user"] or ""):
+        if parsed is None or not SAFE_LOGIN.fullmatch(it["user"] or "") or it["user"].lower() in blocked:
             continue
         runs.append((it["user"], display(*parsed), it["created_at"]))
     if not runs:
         return "_No runs yet. Be the first: click a command above._"
     visitors = len({u.lower() for u, _, _ in runs})
-    out = [f"**{len(runs):,} command{'s' if len(runs) != 1 else ''}** run by **{visitors:,} visitor{'s' if visitors != 1 else ''}** so far. Latest:", "",
+    count = max(total or 0, len(runs))
+    plus = "+" if truncated else ""
+    out = [f"**{count:,} command{'s' if count != 1 else ''}** run by **{visitors:,}{plus} visitor{'s' if visitors != 1 or plus else ''}** so far. Latest:", "",
            "| Visitor | Ran | When (UTC) |", "| :-- | :-- | :-- |"]
     for user, shown, at in runs[:limit]:
         out.append(f"| [@{user}](https://github.com/{user}) | `{shown}` | {at[:16].replace('T', ' ')} |")

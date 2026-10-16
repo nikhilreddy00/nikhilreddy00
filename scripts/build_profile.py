@@ -23,8 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from profile_engine import cards, latent, metrics, readme, site, story  # noqa: E402
-from profile_engine.github import fetch  # noqa: E402
+from profile_engine import metrics  # noqa: E402  (no numpy: safe in the step that holds the token)
 
 ASSETS = ROOT / "assets"
 SITE_DATA = ROOT / "site" / "data.json"
@@ -33,6 +32,8 @@ FINGERPRINT = ASSETS / ".fingerprint"
 
 def render(m: metrics.Metrics, config: dict) -> tuple[dict[str, str], dict[str, str], str]:
     """Return (asset files, README live sections, site data)."""
+    # Imported here so `--fetch-only` never loads numpy/third-party code next to a token.
+    from profile_engine import cards, latent, readme, site, story
     points, clusters = latent.embed(m.public_repos, config["latent_space"]["labels"])
     files = {}
     for mode in ("dark", "light"):
@@ -58,6 +59,7 @@ def main() -> int:
     ap.add_argument("--snapshot", type=Path, help="render from a saved snapshot instead of the API")
     ap.add_argument("--save-snapshot", type=Path, help="write the fetched raw data here")
     ap.add_argument("--force", action="store_true", help="rewrite outputs even if nothing changed")
+    ap.add_argument("--fetch-only", type=Path, help="fetch from the API, write the snapshot here, and stop")
     args = ap.parse_args()
 
     config = tomllib.loads((ROOT / "profile.toml").read_text())
@@ -65,13 +67,18 @@ def main() -> int:
     if args.snapshot:
         snapshot = json.loads(args.snapshot.read_text())
     else:
+        from profile_engine.github import fetch
         token = os.environ.get("GITHUB_TOKEN")
         if not token:
             sys.exit("Set GITHUB_TOKEN (or pass --snapshot).")
         snapshot = fetch(token, config["login"], dt.datetime.now(dt.timezone.utc),
                          repo_token=os.environ.get("PROFILE_TOKEN") or None)
-        if args.save_snapshot:
-            args.save_snapshot.write_text(json.dumps(snapshot, indent=1))
+        out = args.fetch_only or args.save_snapshot
+        if out:
+            out.write_text(json.dumps(snapshot, indent=1))
+        if args.fetch_only:
+            print(f"Snapshot written to {args.fetch_only}")
+            return 0
 
     m = metrics.compute(snapshot, config)
     print(f"{len(m.public_repos)} public repos · {m.contributions_30d} contributions in 30d · "
@@ -89,6 +96,7 @@ def main() -> int:
     SITE_DATA.parent.mkdir(exist_ok=True)
     SITE_DATA.write_text(data)
     readme_path = ROOT / "README.md"
+    from profile_engine import readme
     readme_path.write_text(readme.update(readme_path.read_text(), m, live))
     FINGERPRINT.write_text(fp + "\n")
     print("Profile updated.")

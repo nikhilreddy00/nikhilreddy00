@@ -26,6 +26,8 @@ from profile_engine import agent  # noqa: E402
 from profile_engine.readme import replace_section  # noqa: E402
 
 LABEL = "agent"
+DECLINED = "agent-declined"
+MAX_PAGES = 10           # 1,000 issues; beyond that, fail closed rather than open
 DAILY_LIMIT = 5          # runs per visitor per 24 h
 HOURLY_CAP = 30          # runs per hour across everyone (stops floods from many accounts)
 MIN_ACCOUNT_DAYS = 14    # brand-new accounts are the usual spam source
@@ -50,16 +52,16 @@ def api(method: str, path: str, body: dict | None = None, ok=(200, 201, 204)) ->
         raise RuntimeError(f"{method} {path} -> {e.code}: {e.read()[:300]!r}") from None
 
 
-def agent_issues() -> list[dict]:
-    """All agent-labelled issues, newest first."""
-    out, page = [], 1
-    while True:
+def agent_issues() -> tuple[list[dict], bool]:
+    """Answered (agent-labelled) issues, newest first, and whether the list was cut off."""
+    out = []
+    for page in range(1, MAX_PAGES + 1):
         batch = api("GET", f"/repos/{REPO}/issues?labels={LABEL}&state=all&sort=created&direction=desc&per_page=100&page={page}")
         out += [{"number": i["number"], "title": i["title"], "user": i["user"]["login"], "created_at": i["created_at"]}
                 for i in batch if "pull_request" not in i]
         if len(batch) < 100:
-            return out
-        page += 1
+            return out, False
+    return out, True
 
 
 def readme_excerpt(repo: str, limit: int = 18) -> list[str]:
@@ -82,34 +84,52 @@ def readme_excerpt(repo: str, limit: int = 18) -> list[str]:
 
 def update_readme(just_answered: dict | None = None) -> None:
     data = json.loads((ROOT / "site" / "data.json").read_text())
-    issues = agent_issues()
+    issues, truncated = agent_issues()
     # The label filter can lag a few seconds behind the label we just added.
     if just_answered and all(i["number"] != just_answered["number"] for i in issues):
         issues.insert(0, just_answered)
+    total = None
+    if truncated:
+        res = api("GET", f"/search/issues?q=repo:{REPO}+label:{LABEL}+is:issue&per_page=1")
+        total = res.get("total_count") if res else None
+    section = agent.sessions_section(issues, data, REPO, blocked=blocked_users(), total=total, truncated=truncated)
     path = ROOT / "README.md"
-    path.write_text(replace_section(path.read_text(), "agent", agent.sessions_section(issues, data, REPO)))
+    path.write_text(replace_section(path.read_text(), "agent", section))
+
+
+class WindowTooLarge(Exception):
+    """More issues in the window than we page through: treat as over the limit."""
 
 
 def agent_issues_since(hours: int, creator: str | None = None) -> list[dict]:
-    """Every `agent:` issue opened in the window, answered or not.
+    """Issues opened in the window that count toward a limit, answered or not.
 
     Counting in-flight issues (not just labelled ones) closes the race where a
     burst of parallel runs each saw only the history from before the burst.
+    - With `creator`, every issue by that person counts, whatever its title now
+      says, so renaming an issue can't reset a quota.
+    - Without it (the global cap), issues already declined don't count, so
+      throwaway accounts can't use up the cap for everyone else.
     """
     cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)
     since = cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
     who = f"&creator={creator}" if creator else ""
-    out, page = [], 1
-    while page <= 10:
+    out = []
+    for page in range(1, MAX_PAGES + 1):
         batch = api("GET", f"/repos/{REPO}/issues?state=all&since={since}{who}&per_page=100&page={page}")
         for i in batch:
             created = dt.datetime.fromisoformat(i["created_at"].replace("Z", "+00:00"))
-            if "pull_request" not in i and created >= cutoff and agent.TITLE.match(i["title"] or ""):
-                out.append({"number": i["number"], "user": i["user"]["login"]})
+            if "pull_request" in i or created < cutoff:
+                continue
+            if not creator:
+                if not agent.TITLE.match(i["title"] or ""):
+                    continue
+                if any(l.get("name") == DECLINED for l in i.get("labels", [])):
+                    continue
+            out.append({"number": i["number"], "user": i["user"]["login"]})
         if len(batch) < 100:
-            break
-        page += 1
-    return out
+            return out
+    raise WindowTooLarge()
 
 
 def rank(issues: list[dict], number: int) -> int:
@@ -118,9 +138,16 @@ def rank(issues: list[dict], number: int) -> int:
     return numbers.index(number) + 1
 
 
-def decline(number: int, reason: str, public_note: str) -> None:
-    """Close without running anything and without logging the visitor."""
-    api("POST", f"/repos/{REPO}/issues/{number}/comments", {"body": public_note})
+def decline(number: int, reason: str, public_note: str | None = None) -> None:
+    """Close and lock without running anything or logging the visitor.
+
+    Most declines are silent so spam doesn't turn into a stream of public bot
+    comments; the `agent-declined` label keeps them out of the global count.
+    """
+    api("POST", f"/repos/{REPO}/labels", {"name": DECLINED, "color": "8b949e", "description": "Profile agent: not run"}, ok=(422,))
+    api("POST", f"/repos/{REPO}/issues/{number}/labels", {"labels": [DECLINED]})
+    if public_note:
+        api("POST", f"/repos/{REPO}/issues/{number}/comments", {"body": public_note})
     api("PATCH", f"/repos/{REPO}/issues/{number}", {"state": "closed", "state_reason": "not_planned"})
     api("PUT", f"/repos/{REPO}/issues/{number}/lock", {"lock_reason": "resolved"}, ok=(204,))
     print(f"Declined #{number}: {reason}")
@@ -152,21 +179,27 @@ def respond() -> None:
 
     # Guards, cheapest first. None of them run anything the visitor wrote.
     if user_type != "User" or not agent.SAFE_LOGIN.fullmatch(user):
-        return decline(number, f"non-user author {user!r}", "This agent only answers people, not bots or apps.")
+        return decline(number, f"non-user author {user!r}")
     if user.lower() in blocked_users():
-        return decline(number, f"blocked user {user}", later)
+        return decline(number, "blocked user")
     if user.lower() != owner:
         profile = api("GET", f"/users/{user}")
         created = dt.datetime.fromisoformat(profile["created_at"].replace("Z", "+00:00"))
         if dt.datetime.now(dt.timezone.utc) - created < dt.timedelta(days=MIN_ACCOUNT_DAYS):
-            return decline(number, "account too new", f"This agent answers accounts older than {MIN_ACCOUNT_DAYS} days. {later}")
+            return decline(number, "account too new")
 
-    if user.lower() != owner:
         # Deterministic under bursts: every parallel run ranks the same issue list
         # by issue number, so exactly the first N in each window get answered.
-        if rank(agent_issues_since(24, creator=user), number) > DAILY_LIMIT:
-            return decline(number, "daily limit", f"You've run {DAILY_LIMIT} commands in the last 24 hours, the daily limit here. {later}")
-        if rank(agent_issues_since(1), number) > HOURLY_CAP:
+        try:
+            daily = rank(agent_issues_since(24, creator=user), number)
+            hourly = rank(agent_issues_since(1), number)
+        except WindowTooLarge:
+            return decline(number, "window too large (fail closed)")
+        if daily > DAILY_LIMIT:
+            # One friendly note on the first run over the limit; silent after that.
+            note = f"You've run {DAILY_LIMIT} commands in the last 24 hours, the daily limit here. {later}"
+            return decline(number, "daily limit", note if daily == DAILY_LIMIT + 1 else None)
+        if hourly > HOURLY_CAP:
             return decline(number, "hourly cap", f"The agent is busy right now. {later}")
 
     api("POST", f"/repos/{REPO}/labels", {"name": LABEL, "color": "39c5bb", "description": "Profile agent runs"}, ok=(422,))

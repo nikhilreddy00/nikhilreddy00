@@ -13,6 +13,7 @@ BAR_WIDTH = 16
 
 
 def _cell(s: str) -> str:
+    s = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     return s.replace("|", "\\|").replace("\n", " ").strip()
 
 

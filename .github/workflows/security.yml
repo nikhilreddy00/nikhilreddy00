@@ -1,0 +1,31 @@
+name: Security tests
+
+# Re-runs the red/blue-team regression suite on every change, so a future
+# edit can't quietly undo a protection. No secrets, read-only token.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "assets/**"
+      - "site/data.json"
+  pull_request:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - run: "pip install --require-hashes --only-binary=:all: -r tests/requirements.txt"
+      - name: Run the security suite (network disabled inside the suite)
+        run: python -I tests/security_tests.py "$GITHUB_WORKSPACE"
