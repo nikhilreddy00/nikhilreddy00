@@ -122,4 +122,9 @@ def respond() -> None:
 
 
 if __name__ == "__main__":
-    {"respond": respond, "sessions": update_readme}[sys.argv[1] if len(sys.argv) > 1 else "respond"]()
+    try:
+        {"respond": respond, "sessions": update_readme}[sys.argv[1] if len(sys.argv) > 1 else "respond"]()
+    except Exception as exc:
+        # Surface the reason as a workflow annotation (visible in the Actions UI and API).
+        print(f"::error title=Profile agent failed::{type(exc).__name__}: {str(exc)[:500]}")
+        raise
