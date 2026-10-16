@@ -35,8 +35,9 @@ jobs:
 
       - name: Fetch GitHub data and render
         env:
-          # PROFILE_TOKEN (read-only, your account) adds private activity to the totals.
-          GITHUB_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: a read-only token of yours that can see private repos adds their languages.
+          PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
         run: python scripts/build_profile.py
 
       - name: Commit if anything changed

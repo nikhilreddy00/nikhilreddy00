@@ -35,6 +35,11 @@ class Metrics:
     recent: list[Repo]
     languages: list[tuple[str, str, float]]   # (name, color, share 0..1)
     days: list[tuple[dt.date, int]]           # last 90 days, oldest first
+    year: list[tuple[dt.date, int]]           # last 365 days, oldest first
+    repo_commits: list[tuple[str, str, int]]  # public (name, url, commits in the last year)
+    private_commits: int                      # same window, all private repos combined
+    private_commit_repos: int
+    restricted_contributions: int             # private work GitHub doesn't attribute to a repo
     contributions_30d: int
     contributions_prev_30d: int
     active_days_90d: int
@@ -128,6 +133,17 @@ def compute(snapshot: dict, config: dict) -> Metrics:
     window_start = dt.datetime.combine(last90[0][0], dt.time(), tzinfo=dt.timezone.utc)
     checkpoints = sorted((r for r in public if r.created >= window_start), key=lambda r: r.created)
 
+    repo_commits, private_commits, private_commit_repos = [], 0, 0
+    for c in snapshot.get("commit_repos", []):
+        if c["name"].lower() in excluded:
+            continue
+        if c["isPrivate"]:
+            private_commits += c["count"]
+            private_commit_repos += 1
+        else:
+            repo_commits.append((c["name"], c["url"], c["count"]))
+    repo_commits.sort(key=lambda t: -t[2])
+
     return Metrics(
         login=snapshot["login"],
         generated_at=now,
@@ -136,6 +152,11 @@ def compute(snapshot: dict, config: dict) -> Metrics:
         recent=recent,
         languages=languages,
         days=last90,
+        year=cal[-365:],
+        repo_commits=repo_commits,
+        private_commits=private_commits,
+        private_commit_repos=private_commit_repos,
+        restricted_contributions=snapshot.get("restricted_contributions", 0),
         contributions_30d=sum(counts[-30:]),
         contributions_prev_30d=sum(counts[-60:-30]),
         active_days_90d=sum(1 for c in counts[-90:] if c),

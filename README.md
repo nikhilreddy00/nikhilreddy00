@@ -47,6 +47,27 @@ I put deterministic guardrails outside the model wherever correctness matters, a
 
 <sub>Every public repo is embedded from its README, description and topics (TF-IDF → LSA), clustered with k-means, and projected to 2-D. A new repo appears on the map within the hour.</sub>
 
+<details>
+<summary><b>How the map is computed</b> · what each cluster contains and the terms that define it</summary>
+
+<br>
+
+Each repo becomes a TF-IDF vector over its README, description and topics, which LSA compresses to 10 dimensions. k-means groups the vectors, trying k = 3 to 7 and keeping the k with the best silhouette score. Each cluster is named from its strongest terms, and the map places similar clusters near each other.
+
+<!--live:clusters:start-->
+| Cluster | Repos | Strongest terms |
+| :-- | :-- | :-- |
+| **Classical ML** | [Customer-Churn-Prediction](https://github.com/nikhilreddy00/Customer-Churn-Prediction), [HealthInsurance-PremiumPrediction](https://github.com/nikhilreddy00/HealthInsurance-PremiumPrediction), [LinearRegression](https://github.com/nikhilreddy00/LinearRegression) | `customer` · `linear` · `regression` · `eda` · `customers` · `random` |
+| **Data analytics** | [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork), [Loan-Performance-Data-Insights](https://github.com/nikhilreddy00/Loan-Performance-Data-Insights), [SEC-Corporate-Filings-Insights](https://github.com/nikhilreddy00/SEC-Corporate-Filings-Insights), [Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics](https://github.com/nikhilreddy00/Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics), [NYSO-Electricity-Consumption-and-Pricing-Insights](https://github.com/nikhilreddy00/NYSO-Electricity-Consumption-and-Pricing-Insights) | `learning` · `insights` · `big` · `machine` · `loan` · `models` |
+| **Agentic RAG** | [sec-finance-rag](https://github.com/nikhilreddy00/sec-finance-rag), [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag), [Metadata-Aware-Rag](https://github.com/nikhilreddy00/Metadata-Aware-Rag), [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa), [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | `rag` · `chunks` · `sec` · `langchain` · `vector` · `retrieval` |
+| **Health AI** | [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API), [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | `drug` · `pubmed` · `safety` · `pharmacovigilance` · `fda` · `assessment` |
+| **Voice agents** | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent), [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | `voice` · `call` · `cartesia` · `deepgram` · `real` · `clinic` |
+| **Computer use** | [praxis](https://github.com/nikhilreddy00/praxis), [AnalystAI](https://github.com/nikhilreddy00/AnalystAI), [travel-wiki](https://github.com/nikhilreddy00/travel-wiki), [resumegenerator](https://github.com/nikhilreddy00/resumegenerator) | `claude` · `wiki` · `anthropic` · `api` · `travel` · `pages` |
+| **Multi-agent systems** | [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews), [mirofish-meta-layoffs](https://github.com/nikhilreddy00/mirofish-meta-layoffs) | `ai-powered` · `mirofish` · `multi-agent` · `simulation` · `shap` · `hours` |
+<!--live:clusters:end-->
+
+</details>
+
 ### Recently shipped
 
 <!--live:recent:start-->
@@ -65,6 +86,44 @@ I put deterministic guardrails outside the model wherever correctness matters, a
   <source media="(prefers-color-scheme: dark)" srcset="assets/training-run-dark.svg">
   <img alt="Activity dashboard: daily contributions over 90 days, new repos as checkpoints, language mix, streaks and totals" src="assets/training-run-light.svg" width="100%">
 </picture>
+
+<details>
+<summary><b>Drill down: last 12 months</b> · contribution heatmap and weekday profile</summary>
+
+<br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/training-history-dark.svg">
+  <img alt="Heatmap of daily contributions over the last 12 months and totals by weekday" src="assets/training-history-light.svg" width="100%">
+</picture>
+
+</details>
+
+<details>
+<summary><b>Drill down: commits by repository</b> · where the last 12 months of work went</summary>
+
+<br>
+
+<!--live:repos:start-->
+| Repository | Commits · 12 mo | Share |
+| :-- | --: | :-- |
+| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `████████████████` 21% |
+| [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `██████████░░░░░░` 12% |
+| [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `██████████░░░░░░` 12% |
+| [praxis](https://github.com/nikhilreddy00/praxis) | 3 | `██████████░░░░░░` 12% |
+| [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent) | 2 | `██████░░░░░░░░░░` 8% |
+| [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork) | 2 | `██████░░░░░░░░░░` 8% |
+| [mirofish-meta-layoffs](https://github.com/nikhilreddy00/mirofish-meta-layoffs) | 1 | `███░░░░░░░░░░░░░` 4% |
+| [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | 1 | `███░░░░░░░░░░░░░` 4% |
+| [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag) | 1 | `███░░░░░░░░░░░░░` 4% |
+| [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
+| [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API) | 1 | `███░░░░░░░░░░░░░` 4% |
+| [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
+
+<sub>Plus 12 private contributions that GitHub counts but doesn't attribute to a repository.</sub>
+<!--live:repos:end-->
+
+</details>
 
 ### Experience
 
@@ -90,4 +149,4 @@ stack:      Python · TypeScript · SQL · PySpark · Next.js · Postgres · Dat
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 02:34 UTC<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-10-16 03:25 UTC<!--live:updated:end--></sub>

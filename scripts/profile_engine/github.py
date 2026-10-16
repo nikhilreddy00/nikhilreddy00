@@ -38,6 +38,10 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
     contributionsCollection(from: $from, to: $to) {
       contributionYears
       restrictedContributionsCount
+      commitContributionsByRepository(maxRepositories: 50) {
+        repository { name url isPrivate }
+        contributions { totalCount }
+      }
       contributionCalendar {
         totalContributions
         weeks { contributionDays { date contributionCount } }
@@ -88,13 +92,20 @@ def _iso(d: dt.datetime) -> str:
     return d.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def fetch(token: str, login: str, now: dt.datetime) -> dict:
-    """Return a plain-JSON snapshot of the user's repos and contribution history."""
+def fetch(token: str, login: str, now: dt.datetime, repo_token: str | None = None) -> dict:
+    """Return a plain-JSON snapshot of the user's repos and contribution history.
+
+    Contribution counts always come from `token` (the workflow's own token),
+    which sees the same numbers as your public profile, private work included
+    as anonymous counts. A personal `repo_token` only widens the repo list
+    (private repos' languages); fine-grained tokens undercount contributions.
+    """
     gh = GitHub(token)
+    gh_repos = GitHub(repo_token) if repo_token else gh
 
     repos, cursor = [], None
     while True:
-        data = gh.query(REPOS_QUERY, login=login, cursor=cursor)["user"]
+        data = gh_repos.query(REPOS_QUERY, login=login, cursor=cursor)["user"]
         page = data["repositories"]
         for node in page["nodes"]:
             readme = (node.pop("readme") or {}).get("text") or ""
@@ -129,4 +140,9 @@ def fetch(token: str, login: str, now: dt.datetime) -> dict:
         "calendar": [{"date": d["date"], "count": d["contributionCount"]} for d in days],
         "lifetime_contributions": lifetime,
         "restricted_contributions": coll["restrictedContributionsCount"],
+        "commit_repos": [
+            {"name": c["repository"]["name"], "url": c["repository"]["url"],
+             "isPrivate": c["repository"]["isPrivate"], "count": c["contributions"]["totalCount"]}
+            for c in coll["commitContributionsByRepository"]
+        ],
     }

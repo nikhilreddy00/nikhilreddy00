@@ -30,21 +30,23 @@ ASSETS = ROOT / "assets"
 FINGERPRINT = ASSETS / ".fingerprint"
 
 
-def render(m: metrics.Metrics, config: dict) -> dict[str, str]:
+def render(m: metrics.Metrics, config: dict) -> tuple[dict[str, str], dict[str, str]]:
+    """Return (asset files, README live sections)."""
     points, clusters = latent.embed(m.public_repos, config["latent_space"]["labels"])
-    out = {}
+    files = {}
     for mode in ("dark", "light"):
-        out[f"agent-trace-{mode}.svg"] = cards.agent_trace(m, config["identity"], mode)
-        out[f"latent-space-{mode}.svg"] = cards.latent_map(points, clusters, m, mode)
-        out[f"training-run-{mode}.svg"] = cards.training_run(m, mode)
-    return out
+        files[f"agent-trace-{mode}.svg"] = cards.agent_trace(m, config["identity"], mode)
+        files[f"latent-space-{mode}.svg"] = cards.latent_map(points, clusters, m, mode)
+        files[f"training-run-{mode}.svg"] = cards.training_run(m, mode)
+        files[f"training-history-{mode}.svg"] = cards.training_history(m, mode)
+    return files, readme.sections(m, points, clusters)
 
 
 def fingerprint(m: metrics.Metrics, config: dict) -> str:
     """Hash of the outputs with the clock pinned to midnight, so hour-only changes don't count."""
     day = m.generated_at.replace(hour=0, minute=0, second=0, microsecond=0)
-    pinned = dataclasses.replace(m, generated_at=day)
-    blob = "".join(v for _, v in sorted(render(pinned, config).items())) + readme.recent_table(pinned)
+    files, live = render(dataclasses.replace(m, generated_at=day), config)
+    blob = "".join(v for _, v in sorted(files.items())) + "".join(v for _, v in sorted(live.items()))
     return hashlib.sha256(blob.encode()).hexdigest()
 
 
@@ -63,7 +65,8 @@ def main() -> int:
         token = os.environ.get("GITHUB_TOKEN")
         if not token:
             sys.exit("Set GITHUB_TOKEN (or pass --snapshot).")
-        snapshot = fetch(token, config["login"], dt.datetime.now(dt.timezone.utc))
+        snapshot = fetch(token, config["login"], dt.datetime.now(dt.timezone.utc),
+                         repo_token=os.environ.get("PROFILE_TOKEN") or None)
         if args.save_snapshot:
             args.save_snapshot.write_text(json.dumps(snapshot, indent=1))
 
@@ -77,10 +80,11 @@ def main() -> int:
         return 0
 
     ASSETS.mkdir(exist_ok=True)
-    for name, svg in render(m, config).items():
+    files, live = render(m, config)
+    for name, svg in files.items():
         (ASSETS / name).write_text(svg)
     readme_path = ROOT / "README.md"
-    readme_path.write_text(readme.update(readme_path.read_text(), m))
+    readme_path.write_text(readme.update(readme_path.read_text(), m, live))
     FINGERPRINT.write_text(fp + "\n")
     print("Profile updated.")
     return 0

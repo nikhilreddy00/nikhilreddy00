@@ -1,16 +1,22 @@
-"""The three Agent OS cards: agent trace, latent space map, training run."""
+"""The Agent OS cards: agent trace, latent space map, training run, training history.
+
+GitHub shows README images as plain <img>, so these SVGs can't react to the
+mouse. Motion is pure CSS: the trace retypes itself on a loop, the map
+drifts, the dashboard draws its curve and counts its numbers up. Everything
+also has a complete still frame for prefers-reduced-motion.
+"""
 
 from __future__ import annotations
 
 import datetime as dt
 import math
+import re
 
 from .latent import Cluster, Point
 from .metrics import Metrics
 from .svg import CATEGORICAL, PALETTES, document, esc, text, text_width
 
 W = 880
-REDUCED = "@media (prefers-reduced-motion: reduce){*{animation:none!important}.l{opacity:1}}"
 
 
 def _short_date(d: dt.datetime) -> str:
@@ -29,8 +35,12 @@ def _streak_segments(m: Metrics) -> list[tuple[str, str]]:
     return [("muted", "no recent activity")]
 
 
+def _pc(v: float) -> str:
+    return f"{v:.2f}".rstrip("0").rstrip(".")
+
+
 # --------------------------------------------------------------------------
-# A. Agent trace (hero)
+# A. Agent trace (hero) — retypes itself every cycle
 # --------------------------------------------------------------------------
 
 def agent_trace(m: Metrics, identity: dict, mode: str) -> str:
@@ -60,6 +70,13 @@ def agent_trace(m: Metrics, identity: dict, mode: str) -> str:
 
     size, lh, top = 13.5, 23, 64
     height = top + lh * len(lines) + 10
+    # Timeline: a tool call "thinks" briefly before its result line lands.
+    starts, t = [], 0.4
+    for segs in lines:
+        starts.append(t)
+        t += 0.55 if segs[0] is tool else 0.22
+    cycle = t + 9.0  # hold the finished trace, then clear and retype
+
     body = [
         f'<rect x="0.5" y="0.5" width="{W - 1}" height="{height - 1}" rx="12" fill="{p["panel"]}" stroke="{p["line"]}"/>',
         f'<circle cx="22" cy="21" r="6" fill="{p["dot_red"]}"/><circle cx="42" cy="21" r="6" fill="{p["dot_yellow"]}"/>'
@@ -67,26 +84,31 @@ def agent_trace(m: Metrics, identity: dict, mode: str) -> str:
         text(W / 2, 25.5, f"{m.login}@agent: ~/profile", p["muted"], 12, anchor="middle"),
         f'<line x1="0" x2="{W}" y1="41.5" y2="41.5" stroke="{p["line"]}"/>',
     ]
+    keyframes = []
     y = top
     for i, segs in enumerate(lines):
+        a = starts[i] / cycle * 100
+        b = (starts[i] + 0.18) / cycle * 100
+        keyframes.append(f"@keyframes t{i}{{0%,{_pc(a)}%{{opacity:0}}{_pc(b)}%,97%{{opacity:1}}100%{{opacity:0}}}}")
         spans = []
         for color, s in segs:
             fill = color[5:] if color.startswith("lang:") else p[color]
             spans.append(f'<tspan fill="{fill}">{esc(s)}</tspan>')
-        body.append(f'<text class="l" style="animation-delay:{0.12 + i * 0.22:.2f}s" x="24" y="{y}" '
+        body.append(f'<text class="l" style="animation-name:t{i}" x="24" y="{y}" '
                     f'font-size="{size}" xml:space="preserve">{"".join(spans)}</text>')
         y += lh
     last_w = sum(len(s) for _, s in lines[-1]) * size * 0.602
-    body.append(f'<rect class="cur" x="{24 + last_w + 4:.1f}" y="{y - lh - 12}" width="8" height="15" fill="{p["fg"]}"/>')
-    style = (".l{opacity:0;animation:in .35s ease-out forwards}"
-             "@keyframes in{to{opacity:1}}"
-             f".cur{{opacity:0;animation:in .1s {0.12 + len(lines) * 0.22:.2f}s forwards,blink 1.1s {0.12 + len(lines) * 0.22:.2f}s steps(1) infinite}}"
-             "@keyframes blink{50%{opacity:0}}" + REDUCED)
+    body.append(f'<g class="l" style="animation-name:t{len(lines) - 1}">'
+                f'<rect class="cur" x="{24 + last_w + 4:.1f}" y="{y - lh - 12}" width="8" height="15" fill="{p["fg"]}"/></g>')
+    style = (f".l{{opacity:0;animation-duration:{cycle:.2f}s;animation-timing-function:linear;animation-iteration-count:infinite}}"
+             ".cur{animation:blink 1.1s steps(1) infinite}@keyframes blink{50%{opacity:0}}"
+             + "".join(keyframes)
+             + "@media (prefers-reduced-motion: reduce){.l,.cur{animation:none!important;opacity:1}}")
     return document(W, height, "".join(body), f"{m.login} agent trace: latest repos and activity", style)
 
 
 # --------------------------------------------------------------------------
-# B. Latent space map
+# B. Latent space map — points drift, regions breathe
 # --------------------------------------------------------------------------
 
 def _overlaps(box, boxes, pad=3):
@@ -121,8 +143,8 @@ def latent_map(points: list[Point], clusters: list[Cluster], m: Metrics, mode: s
         cx, cy = sum(xs) / len(xs), sum(ys) / len(ys)
         rx = max(max(abs(x - cx) for x in xs) + 34, 46)
         ry = max(max(abs(y - cy) for y in ys) + 28, 34)
-        body.append(f'<ellipse cx="{cx:.1f}" cy="{cy:.1f}" rx="{rx:.1f}" ry="{ry:.1f}" fill="{color_of[j]}" fill-opacity="0.09" '
-                    f'stroke="{color_of[j]}" stroke-opacity="0.25" stroke-dasharray="3 4"/>')
+        body.append(f'<ellipse class="br" style="animation-delay:-{j * 1.3:.1f}s" cx="{cx:.1f}" cy="{cy:.1f}" rx="{rx:.1f}" ry="{ry:.1f}" '
+                    f'fill="{color_of[j]}" fill-opacity="0.09" stroke="{color_of[j]}" stroke-opacity="0.25" stroke-dasharray="3 4"/>')
         label = c.label
         lw = text_width(label, 12)
         ly = max(cy - ry - 8, top - 22)
@@ -136,16 +158,21 @@ def latent_map(points: list[Point], clusters: list[Cluster], m: Metrics, mode: s
         boxes.append(box)
         body.append(text(lx, ly, label, color_of[j], 12, 700, anchor="middle"))
 
-    # Points, newest drawn last so they sit on top.
+    # Each point and its label share a drift animation so they move together.
+    def drift(name: str) -> str:
+        k = sum(map(ord, name))
+        return f'class="d{k % 4}" style="animation-delay:-{(k % 37) / 4:.2f}s"'
+
     marks, labels, radius = [], [], {}
     for pt in sorted(points, key=lambda q: -rank[q.repo.name]):
         x, y = X(pt.x), Y(pt.y)
         k = rank[pt.repo.name]
         r = radius[pt.repo.name] = 3.5 + 4.5 * (1 - k / max(n - 1, 1))
         col = color_of[pt.cluster]
-        if k == 0:
-            marks.append(f'<circle class="glow" cx="{x:.1f}" cy="{y:.1f}" r="{r + 7:.1f}" fill="{col}" fill-opacity="0.35"/>')
-        marks.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="{col}" stroke="{p["bg"]}" stroke-width="1.5"/>')
+        glow = (f'<circle class="glow" cx="{x:.1f}" cy="{y:.1f}" r="{r + 7:.1f}" fill="{col}" fill-opacity="0.35"/>'
+                if k == 0 else "")
+        marks.append(f'<g {drift(pt.repo.name)}>{glow}<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="{col}" '
+                     f'stroke="{p["bg"]}" stroke-width="1.5"/></g>')
         boxes.append((x - r, y - r, x + r, y + r))
 
     for pt in sorted(points, key=lambda q: rank[q.repo.name])[:14]:
@@ -158,18 +185,29 @@ def latent_map(points: list[Point], clusters: list[Cluster], m: Metrics, mode: s
             if x0 < 8 or x0 + tw > W - 8 or _overlaps(box, boxes, 2):
                 continue
             boxes.append(box)
-            labels.append(text(x + dx, y + dy, name, p["fg"], 11, anchor=anchor))
+            labels.append(f'<g {drift(pt.repo.name)}>{text(x + dx, y + dy, name, p["fg"], 11, anchor=anchor)}</g>')
             break
 
     body += marks + labels
     body.append(text(24, H - 22, "TF-IDF → LSA → k-means (k picked by silhouette) → PCA", p["faint"], 11))
     body.append(text(W - 24, H - 22, f"recomputed {m.generated_at:%Y-%m-%d}", p["faint"], 11, anchor="end"))
-    style = ".glow{animation:pulse 2.4s ease-in-out infinite}@keyframes pulse{50%{fill-opacity:.08}}" + REDUCED
+    orbits = [((2, -3), (-1, -5), (-3, -2)), ((-3, 2), (-5, -1), (-2, 3)),
+              ((3, 2), (1, 4), (-2, 1)), ((-2, -3), (2, -4), (3, -1))]
+    style = "".join(
+        f"@keyframes d{i}{{0%,100%{{transform:translate(0,0)}}"
+        + "".join(f"{q}%{{transform:translate({a}px,{b}px)}}" for q, (a, b) in zip((25, 50, 75), o)) + "}"
+        f".d{i}{{animation:d{i} {8 + i * 1.7:.1f}s ease-in-out infinite}}"
+        for i, o in enumerate(orbits)
+    )
+    style += (".br{transform-box:fill-box;transform-origin:center;animation:br 9s ease-in-out infinite}"
+              "@keyframes br{50%{transform:scale(1.035)}}"
+              ".glow{animation:pulse 2.4s ease-in-out infinite}@keyframes pulse{50%{fill-opacity:.08}}"
+              "@media (prefers-reduced-motion: reduce){*{animation:none!important}}")
     return document(W, H, "".join(body), "Map of public repositories clustered by topic", style)
 
 
 # --------------------------------------------------------------------------
-# D. Training run (stats strip)
+# D. Training run — curve draws itself, numbers count up
 # --------------------------------------------------------------------------
 
 def _nice_max(v: float) -> int:
@@ -182,12 +220,44 @@ def _nice_max(v: float) -> int:
     return int(v)
 
 
+COUNT_FRAMES = 12
+COUNT_DUR, COUNT_DELAY = 1.6, 0.5
+
+
+def _count_up_style() -> str:
+    css = []
+    for k in range(COUNT_FRAMES):
+        a = k / COUNT_FRAMES * 100
+        b = (k + 1) / COUNT_FRAMES * 100
+        if k < COUNT_FRAMES - 1:
+            css.append(f"@keyframes c{k}{{0%,{_pc(a)}%{{opacity:0}}{_pc(a + .01)}%,{_pc(b)}%{{opacity:1}}{_pc(b + .01)}%,100%{{opacity:0}}}}")
+        else:
+            css.append(f"@keyframes c{k}{{0%,{_pc(a)}%{{opacity:0}}{_pc(a + .01)}%,100%{{opacity:1}}}}")
+        css.append(f".c{k}{{animation:c{k} {COUNT_DUR}s linear {COUNT_DELAY}s both}}")
+    return ".cf{opacity:0}" + "".join(css)
+
+
+def _count_up(x: float, y: float, value: str, fill: str, size: int) -> str:
+    """Stack of frames that tick from 0 to the value; non-numeric values just fade in."""
+    match = re.fullmatch(r"([\d,]+)(.*)", value)
+    if not match:
+        return f'<g class="c{COUNT_FRAMES - 1}">{text(x, y, value, fill, size, 700)}</g>'
+    target, suffix = int(match.group(1).replace(",", "")), match.group(2)
+    out = []
+    for k in range(COUNT_FRAMES):
+        t = (k + 1) / COUNT_FRAMES
+        v = round(target * (1 - (1 - t) ** 3))   # ease-out
+        cls = f"c{k}" + ("" if k == COUNT_FRAMES - 1 else " cf")
+        out.append(f'<g class="{cls}">{text(x, y, f"{v:,}{suffix}", fill, size, 700)}</g>')
+    return "".join(out)
+
+
 def training_run(m: Metrics, mode: str) -> str:
     p = PALETTES[mode]
     H = 360
+    draw = 2.2  # seconds for the curve to draw
     body = [f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="12" fill="{p["panel"]}" stroke="{p["line"]}"/>']
 
-    # Header
     body.append(text(24, 34, f"run: {m.login}/career", p["fg"], 15, 700))
     body.append(text(24 + text_width(f"run: {m.login}/career  ", 15), 34,
                      f"step {m.lifetime_contributions:,}  (lifetime contributions)", p["muted"], 12))
@@ -207,37 +277,38 @@ def training_run(m: Metrics, mode: str) -> str:
         body.append(text(cx0 - 8, Y(v) + 4, str(v), p["faint"], 10, anchor="end"))
     if counts:
         pts = " ".join(f"L{X(i):.1f},{Y(c):.1f}" for i, c in enumerate(counts))
-        body.append(f'<path d="M{X(0):.1f},{cy1} {pts} L{X(len(counts) - 1):.1f},{cy1} Z" fill="{p["teal"]}" fill-opacity="0.18"/>')
+        body.append(f'<path class="area" d="M{X(0):.1f},{cy1} {pts} L{X(len(counts) - 1):.1f},{cy1} Z" fill="{p["teal"]}" fill-opacity="0.18"/>')
         ema, smooth = counts[0], []
         for c in counts:
             ema = 0.85 * ema + 0.15 * c
             smooth.append(ema)
         line = " ".join(f"{'M' if i == 0 else 'L'}{X(i):.1f},{Y(v):.1f}" for i, v in enumerate(smooth))
-        body.append(f'<path d="{line}" fill="none" stroke="{p["teal"]}" stroke-width="2.2" stroke-linejoin="round"/>')
-        body.append(f'<circle cx="{X(len(counts) - 1):.1f}" cy="{Y(smooth[-1]):.1f}" r="3.5" fill="{p["teal"]}"/>')
-        # Month ticks
+        body.append(f'<path class="curve" pathLength="1" d="{line}" fill="none" stroke="{p["teal"]}" stroke-width="2.2" stroke-linejoin="round"/>')
+        body.append(f'<circle class="pop" style="animation-delay:{draw:.2f}s" cx="{X(len(counts) - 1):.1f}" cy="{Y(smooth[-1]):.1f}" r="3.5" fill="{p["teal"]}"/>')
         for i, (d, _) in enumerate(m.days):
             if d.day == 1:
                 body.append(f'<line x1="{X(i):.1f}" x2="{X(i):.1f}" y1="{cy1}" y2="{cy1 + 4}" stroke="{p["faint"]}"/>')
                 body.append(text(X(i), cy1 + 16, d.strftime("%b"), p["faint"], 10, anchor="middle"))
-        # Checkpoints: public repos created inside the window
+        # Checkpoints pop in as the curve reaches them.
         first = m.days[0][0]
-        shown = m.checkpoints[-3:]
-        for cp in m.checkpoints:
+        shown = {cp.name for cp in m.checkpoints[-3:]}
+        k = 0
+        for cp in reversed(m.checkpoints):
             i = (cp.created.date() - first).days
             if not 0 <= i < len(counts):
                 continue
             x = X(i)
-            body.append(f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{cy0}" y2="{cy1}" stroke="{p["purple"]}" stroke-dasharray="2 3" stroke-opacity="0.8"/>')
-            body.append(f'<path d="M{x:.1f},{cy0 - 5} l5,5 l-5,5 l-5,-5 Z" fill="{p["purple"]}"/>')
-        for k, cp in enumerate(reversed(shown)):
-            i = (cp.created.date() - first).days
-            if 0 <= i < len(counts):
+            delay = 0.3 + draw * i / len(counts)
+            mark = (f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{cy0}" y2="{cy1}" stroke="{p["purple"]}" stroke-dasharray="2 3" stroke-opacity="0.8"/>'
+                    f'<path d="M{x:.1f},{cy0 - 5} l5,5 l-5,5 l-5,-5 Z" fill="{p["purple"]}"/>')
+            if cp.name in shown:
                 label = cp.name if len(cp.name) <= 22 else cp.name[:21] + "…"
-                anchor = "end" if X(i) > cx1 - 120 else "start"
-                body.append(text(X(i) + (-8 if anchor == "end" else 8), cy0 + 12 + k * 14, label, p["purple"], 10, anchor=anchor))
+                anchor = "end" if x > cx1 - 120 else "start"
+                mark += text(x + (-8 if anchor == "end" else 8), cy0 + 12 + k * 14, label, p["purple"], 10, anchor=anchor)
+                k += 1
+            body.append(f'<g class="pop" style="animation-delay:{delay:.2f}s">{mark}</g>')
 
-    # Language mix
+    # Language mix: bars grow in.
     lx0, lx1 = 610, W - 28
     body.append(text(lx0, 62, "language mix · bytes of code", p["muted"], 11))
     for k, (name, color, share) in enumerate(m.languages[:6]):
@@ -245,7 +316,8 @@ def training_run(m: Metrics, mode: str) -> str:
         body.append(text(lx0, y, name, p["fg"], 11))
         body.append(text(lx1, y, _pct(share), p["muted"], 11, anchor="end"))
         body.append(f'<rect x="{lx0}" y="{y + 4}" width="{lx1 - lx0}" height="5" rx="2.5" fill="{p["grid"]}"/>')
-        body.append(f'<rect x="{lx0}" y="{y + 4}" width="{max(3, (lx1 - lx0) * share):.1f}" height="5" rx="2.5" fill="{color}"/>')
+        body.append(f'<rect class="grow" style="animation-delay:{0.2 + k * 0.12:.2f}s" x="{lx0}" y="{y + 4}" '
+                    f'width="{max(3, (lx1 - lx0) * share):.1f}" height="5" rx="2.5" fill="{color}"/>')
     if m.languages_excluded:
         names = ", ".join("notebooks" if n == "Jupyter Notebook" else n for n in m.languages_excluded)
         body.append(text(lx0, 84 + min(len(m.languages), 6) * 22 + 2, f"excludes {names}", p["faint"], 10))
@@ -271,9 +343,87 @@ def training_run(m: Metrics, mode: str) -> str:
     for label, value, sub, subcol in tiles:
         body.append(f'<rect x="{tx:.1f}" y="250" width="{tw:.1f}" height="86" rx="8" fill="{p["bg"]}" stroke="{p["line"]}"/>')
         body.append(text(tx + 12, 272, label, p["muted"], 10.5))
-        body.append(text(tx + 12, 304, value, p["fg"], 24, 700))
+        body.append(_count_up(tx + 12, 304, value, p["fg"], 24))
         body.append(text(tx + 12, 324, sub, subcol, 10.5))
         tx += tw + gap
 
-    style = ".glow{animation:pulse 2s ease-in-out infinite}@keyframes pulse{50%{opacity:.35}}" + REDUCED
+    style = (f".curve{{stroke-dasharray:1;stroke-dashoffset:1;animation:draw {draw}s ease-out .3s forwards}}"
+             "@keyframes draw{to{stroke-dashoffset:0}}"
+             ".area{opacity:0;animation:fade 1.2s ease-out 1.2s forwards}@keyframes fade{to{opacity:1}}"
+             ".pop{opacity:0;animation:fade .4s ease-out forwards}"
+             ".grow{transform-box:fill-box;transform-origin:left;transform:scaleX(0);animation:grow .9s ease-out forwards}"
+             "@keyframes grow{to{transform:scaleX(1)}}"
+             ".glow{animation:pulse 2s ease-in-out infinite}@keyframes pulse{50%{opacity:.35}}"
+             + _count_up_style()
+             + "@media (prefers-reduced-motion: reduce){*{animation:none!important}"
+               ".curve{stroke-dashoffset:0}.area,.pop{opacity:1}.grow{transform:none}"
+               f".c{COUNT_FRAMES - 1}{{opacity:1}}}}")
     return document(W, H, "".join(body), f"{m.login} activity dashboard", style)
+
+
+# --------------------------------------------------------------------------
+# E. Training history — 12-month drill-down
+# --------------------------------------------------------------------------
+
+def training_history(m: Metrics, mode: str) -> str:
+    p = PALETTES[mode]
+    H = 200
+    year = m.year
+    total = sum(c for _, c in year)
+    active = sum(1 for _, c in year if c)
+
+    body = [f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="12" fill="{p["panel"]}" stroke="{p["line"]}"/>',
+            text(24, 34, "training history", p["fg"], 15, 700),
+            text(24 + text_width("training history  ", 15), 34,
+                 f"{total:,} contributions · {active} active days · last 12 months", p["muted"], 12)]
+
+    # Calendar heatmap: weeks as columns, Monday on top.
+    cell, gap, gx, gy = 10, 2.5, 52, 72
+    nonzero = sorted(c for _, c in year if c)
+    q = [nonzero[int(len(nonzero) * f)] for f in (0.25, 0.5, 0.75)] if nonzero else [1, 2, 3]
+    level = lambda c: 0 if not c else 1 + sum(c > t for t in q)
+    opacity = [0, 0.3, 0.5, 0.75, 1.0]
+    first = year[0][0] if year else dt.date.today()
+    offset = first.weekday()
+    weeks = (offset + len(year) + 6) // 7
+    for i, (d, c) in enumerate(year):
+        col, row = (offset + i) // 7, d.weekday()
+        x, y = gx + col * (cell + gap), gy + row * (cell + gap)
+        lv = level(c)
+        fill = p["grid"] if lv == 0 else p["teal"]
+        op = "" if lv == 0 else f' fill-opacity="{opacity[lv]}"'
+        body.append(f'<rect class="wave" style="animation-delay:{col * 0.025:.3f}s" x="{x:.1f}" y="{y:.1f}" width="{cell}" height="{cell}" rx="2" fill="{fill}"{op}/>')
+        if d.day == 1:
+            body.append(text(x, gy - 8, d.strftime("%b"), p["faint"], 10))
+    for row, name in ((0, "Mon"), (2, "Wed"), (4, "Fri"), (6, "Sun")):
+        body.append(text(gx - 8, gy + row * (cell + gap) + 9, name, p["faint"], 9.5, anchor="end"))
+    grid_right = gx + weeks * (cell + gap)
+    ly = gy + 7 * (cell + gap) + 18
+    body.append(text(gx, ly, "less", p["faint"], 10))
+    for lv in range(5):
+        fill = p["grid"] if lv == 0 else p["teal"]
+        op = "" if lv == 0 else f' fill-opacity="{opacity[lv]}"'
+        body.append(f'<rect x="{gx + 30 + lv * 14}" y="{ly - 9}" width="10" height="10" rx="2" fill="{fill}"{op}/>')
+    body.append(text(gx + 30 + 5 * 14 + 4, ly, "more", p["faint"], 10))
+
+    # Weekday profile: when the work happens.
+    wx0 = max(grid_right + 36, 720)
+    body.append(text(wx0, 62, "by weekday", p["muted"], 11))
+    by_day = [0] * 7
+    for d, c in year:
+        by_day[d.weekday()] += c
+    peak = max(by_day) or 1
+    for row, name in enumerate(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]):
+        y = gy + row * (cell + gap)
+        bw = (W - 28 - wx0 - 34) * by_day[row] / peak
+        body.append(text(wx0, y + 9, name, p["faint"], 9.5))
+        body.append(f'<rect class="grow" style="animation-delay:{0.4 + row * 0.08:.2f}s" x="{wx0 + 30}" y="{y + 1}" '
+                    f'width="{max(bw, 2):.1f}" height="{cell - 2}" rx="2" fill="{p["purple"]}" fill-opacity="0.8"/>')
+    busiest = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][by_day.index(peak)]
+    body.append(text(wx0, ly, f"busiest: {busiest}" if total else "no activity yet", p["faint"], 10))
+
+    style = (".wave{opacity:0;animation:fade .5s ease-out forwards}@keyframes fade{to{opacity:1}}"
+             ".grow{transform-box:fill-box;transform-origin:left;transform:scaleX(0);animation:grow .8s ease-out forwards}"
+             "@keyframes grow{to{transform:scaleX(1)}}"
+             "@media (prefers-reduced-motion: reduce){*{animation:none!important}.wave{opacity:1}.grow{transform:none}}")
+    return document(W, H, "".join(body), f"{m.login} contributions over the last 12 months", style)
