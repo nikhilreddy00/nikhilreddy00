@@ -1,8 +1,10 @@
 /* Agent OS: GitHub-dark terminal aesthetic, dark first with a full light theme.
    Layout: sticky header with three tabs; each tab is one full-width "page". */
 :root {
-  --bg: #0d1117; --panel: #161b22; --raise: #1c2129; --line: #30363d; --grid: #21262d;
+  --bg: #0e0d18; --panel: #14131f; --raise: #1b1a29; --line: #2c2942; --grid: #1f1d31;
   --fg: #e6edf3; --muted: #8b949e; --faint: #6e7681;
+  /* Aurora x Mesh: one hue per view, plus pink and sky blooms */
+  --indigo: #7c8cff; --violet: #b392f0; --teal: #39c5bb; --pink: #db2777; --sky: #0ea5e9; --bloom: 20%;
   --accent: #39c5bb; --blue: #58a6ff; --purple: #bc8cff; --yellow: #e3b341;
   --good: #3fb950; --bad: #f85149;
   /* categorical (validated, dark surface) */
@@ -15,8 +17,9 @@
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --bg: #ffffff; --panel: #f6f8fa; --raise: #ffffff; --line: #d0d7de; --grid: #eaeef2;
+    --bg: #fbfbfe; --panel: #ffffff; --raise: #ffffff; --line: #e6e2f0; --grid: #f0eef6;
     --fg: #1f2328; --muted: #59636e; --faint: #818b98;
+    --indigo: #4f5bd5; --violet: #8250df; --teal: #0b8f87; --pink: #f472b6; --sky: #38bdf8; --bloom: 16%;
     --accent: #0b7a75; --blue: #0969da; --purple: #8250df; --yellow: #9a6700;
     --good: #1a7f37; --bad: #cf222e;
     --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #6250d6; --s8: #e34948;
@@ -25,8 +28,9 @@
   }
 }
 :root[data-theme="light"] {
-  --bg: #ffffff; --panel: #f6f8fa; --raise: #ffffff; --line: #d0d7de; --grid: #eaeef2;
+  --bg: #fbfbfe; --panel: #ffffff; --raise: #ffffff; --line: #e6e2f0; --grid: #f0eef6;
   --fg: #1f2328; --muted: #59636e; --faint: #818b98;
+  --indigo: #4f5bd5; --violet: #8250df; --teal: #0b8f87; --pink: #f472b6; --sky: #38bdf8; --bloom: 16%;
   --accent: #0b7a75; --blue: #0969da; --purple: #8250df; --yellow: #9a6700;
   --good: #1a7f37; --bad: #cf222e;
   --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #6250d6; --s8: #e34948;
@@ -197,3 +201,31 @@ table.repos { width: 100%; border-collapse: collapse; font: 12.5px var(--mono); 
 .foot { max-width: 1240px; margin: 0 auto; font: 12px var(--mono); padding: 18px max(16px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---- Aurora x Mesh theme ------------------------------------------------ */
+body { --hue: var(--indigo); }
+body[data-view="map"] { --hue: var(--violet); }
+body[data-view="dashboard"] { --hue: var(--teal); }
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(1100px 620px at 0% 0%, color-mix(in srgb, var(--hue) var(--bloom), transparent), transparent 62%),
+    radial-gradient(900px 520px at 100% 6%, color-mix(in srgb, var(--pink) calc(var(--bloom) * 0.75), transparent), transparent 60%),
+    radial-gradient(1000px 640px at 60% 105%, color-mix(in srgb, var(--sky) calc(var(--bloom) * 0.8), transparent), transparent 62%);
+  background-attachment: fixed;
+}
+.top { background: color-mix(in srgb, var(--bg) 78%, transparent); }
+.tabs a[aria-selected="true"] { box-shadow: inset 0 -2px 0 var(--hue); }
+.brand-mark { color: var(--hue); }
+.term, .map-wrap, .card {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--hue) 9%, var(--panel)), var(--panel) 55%);
+  border-color: color-mix(in srgb, var(--hue) 28%, var(--line));
+}
+.term::before, .map-wrap::before, .card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, var(--hue), var(--pink) 60%, var(--sky));
+}
+.kpi { background: color-mix(in srgb, var(--hue) 5%, var(--panel)); border-color: color-mix(in srgb, var(--hue) 22%, var(--line)); }
+.chip:hover, .seg button[aria-pressed="true"] { box-shadow: inset 0 -2px 0 var(--hue); }
+.chip:hover { border-color: var(--hue); color: var(--hue); box-shadow: none; }

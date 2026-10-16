@@ -29,6 +29,7 @@ async function main() {
 
   function route() {
     const view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "terminal";
+    document.body.dataset.view = view;
     for (const v of VIEWS) {
       $(`#view-${v}`).hidden = v !== view;
       $(`#tab-${v}`).setAttribute("aria-selected", String(v === view));

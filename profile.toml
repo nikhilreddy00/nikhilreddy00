@@ -6,7 +6,7 @@ login = "nikhilreddy00"
 # Times shown on the profile, the site and agent replies (daylight saving handled).
 timezone = "America/New_York"
 # Card look: classic | aurora | mesh | blueprint | aurora-mesh | aurora-mesh-vivid (each has light + dark).
-theme = "classic"
+theme = "aurora-mesh"
 
 [identity]
 name = "Nikhil Reddy"
