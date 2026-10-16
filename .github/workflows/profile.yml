@@ -10,10 +10,13 @@ on:
       - "scripts/**"
       - "profile.toml"
       - "README.md"
+      - "site/**"
       - ".github/workflows/profile.yml"
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: live-profile
@@ -23,6 +26,8 @@ jobs:
   render:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
 
@@ -41,10 +46,12 @@ jobs:
         run: python scripts/build_profile.py
 
       - name: Commit if anything changed
+        id: commit
         run: |
-          git add assets README.md
+          git add assets README.md site/data.json
           if git diff --cached --quiet; then
             echo "Profile already up to date."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -52,3 +59,24 @@ jobs:
           git commit -m "Refresh live profile"
           git pull --rebase origin main
           git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+  # Publish site/ (the interactive version) to GitHub Pages whenever the data
+  # changed, and on every push or manual run so site code changes go out too.
+  deploy:
+    needs: render
+    if: needs.render.outputs.changed == 'true' || github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

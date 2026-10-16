@@ -9,6 +9,63 @@ name = "Nikhil Reddy"
 headline = "AI Engineer"
 current_role = "Data Scientist"
 current_org = "Echelon Insights"
+summary = "I build production LLM systems: retrieval, multi-agent pipelines, and agents that operate real software. 3+ years across healthcare and financial services."
+linkedin = "https://www.linkedin.com/in/uvnikhil"
+email = "nikhilreddyulindala@gmail.com"
+
+# Shown by the `experience`, `stack` and `education` commands on the live site.
+[[experience]]
+when = "Sep 2026 – now"
+role = "Data Scientist"
+org = "Echelon Insights"
+notes = []
+
+[[experience]]
+when = "Jan 2025 – Aug 2026"
+role = "AI Engineer"
+org = "Milken Institute School of Public Health, GWU"
+notes = [
+  "Hybrid BM25 + embedding retrieval with cross-encoder reranking over 15K records (RAGAS relevancy 0.61 → 0.82)",
+  "Fine-tuned BERT classifier (macro-F1 0.68 → 0.84)",
+  "SageMaker endpoint p95 2.8 s → 1.4 s, owned in production for 11 months",
+]
+
+[[experience]]
+when = "Aug – Dec 2024"
+role = "Data Science Consultant"
+org = "Data Science for Sustainable Development"
+notes = [
+  "FAISS semantic search across JSON, CSV and Parquet surfaced ~1,200 mismatched records",
+  "PySpark feature pipelines on Databricks cut study prep from two days to four hours",
+]
+
+[[experience]]
+when = "May 2023 – May 2024"
+role = "Data Scientist, Conversational AI"
+org = "Cogno AI (acquired by Exotel)"
+notes = [
+  "Intent classification across 40+ banking intents (macro-F1 0.71 → 0.86)",
+  "Agent-assist retrieval over 10K documents (top-3 relevance 62% → 84%)",
+  "FastAPI serving at 380 ms p95",
+]
+
+[stack]
+agents = "LangGraph · CrewAI · MCP · tool calling · human-in-the-loop · guardrails"
+retrieval = "hybrid BM25 + dense · reranking · chunking · Qdrant · FAISS · ChromaDB · Pinecone"
+models = "Claude · GPT · Llama · BERT · LoRA / QLoRA · PyTorch · Hugging Face · XGBoost"
+evals = "RAGAS · DeepEval · LangSmith · LLM-as-judge · A/B testing · drift detection"
+shipping = "FastAPI · Docker · AWS (SageMaker, Bedrock, Lambda, S3) · MLflow · GitHub Actions"
+languages = "Python · TypeScript · SQL · PySpark · Next.js · Postgres · Databricks · Snowflake"
+
+[[education]]
+degree = "MS Data Analytics"
+school = "The George Washington University"
+year = "2026"
+
+[[education]]
+degree = "B.Tech Computer Science"
+school = "Dayananda Sagar University"
+year = "2024"
 
 [projects]
 # Pinned at the top of the README with hand-written copy; the auto list skips them.

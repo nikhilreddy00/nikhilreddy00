@@ -156,7 +156,9 @@ def latent_map(points: list[Point], clusters: list[Cluster], m: Metrics, mode: s
             ly -= 14
             box = (lx - lw / 2, ly - 11, lx + lw / 2, ly + 3)
         boxes.append(box)
-        body.append(text(lx, ly, label, color_of[j], 12, 700, anchor="middle"))
+        # Name in text ink with a swatch: identity never rides on color alone.
+        body.append(f'<circle cx="{lx - lw / 2 - 8:.1f}" cy="{ly - 4:.1f}" r="4" fill="{color_of[j]}"/>')
+        body.append(text(lx, ly, label, p["fg"], 12, 700, anchor="middle"))
 
     # Each point and its label share a drift animation so they move together.
     def drift(name: str) -> str:

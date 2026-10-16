@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nikhil Reddy · Agent OS</title>
+<meta name="description" content="Interactive, live profile of Nikhil Reddy, AI Engineer: a terminal you can type in, a draggable map of projects, and a dashboard of real GitHub activity.">
+<meta property="og:title" content="Nikhil Reddy · Agent OS">
+<meta property="og:description" content="Type in the terminal, drag the latent space, filter the dashboard. Live GitHub data.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230d1117'/><text x='6' y='22' font-family='monospace' font-size='16' fill='%2339c5bb'>&gt;_</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="css/app.css">
+<script>
+  // Apply a saved theme before first paint.
+  try { const t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <a class="brand" href="#terminal" aria-label="Nikhil Reddy, home">
+      <span class="brand-mark" aria-hidden="true">&gt;_</span>
+      <span class="brand-text"><b id="who-name">Nikhil Reddy</b><span id="who-role" class="muted">AI Engineer</span></span>
+    </a>
+    <nav class="tabs" role="tablist" aria-label="Views">
+      <a role="tab" id="tab-terminal" href="#terminal" aria-controls="view-terminal">Terminal</a>
+      <a role="tab" id="tab-map" href="#map" aria-controls="view-map">Latent space</a>
+      <a role="tab" id="tab-dashboard" href="#dashboard" aria-controls="view-dashboard">Dashboard</a>
+    </nav>
+    <div class="top-right">
+      <span class="live" id="live-status" title="Live GitHub activity"><i class="dot"></i><span>connecting…</span></span>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle light or dark theme">◐</button>
+      <a class="icon-btn" href="https://github.com/nikhilreddy00" aria-label="GitHub profile">GH</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="view-terminal" class="view" role="tabpanel" aria-labelledby="tab-terminal">
+    <div class="term" id="term">
+      <div class="term-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>visitor@nikhil-agent: ~</span></div>
+      <div class="term-body" id="term-body">
+        <div id="term-out" class="term-out" aria-live="polite"></div>
+        <form class="term-line" id="term-form" autocomplete="off">
+          <label for="term-input" class="prompt">visitor@nikhil:~$</label>
+          <input id="term-input" class="term-input" type="text" spellcheck="false" autocapitalize="off" aria-label="Terminal command">
+        </form>
+      </div>
+    </div>
+    <div class="chips" id="term-chips" aria-label="Suggested commands"></div>
+  </section>
+
+  <section id="view-map" class="view" role="tabpanel" aria-labelledby="tab-map" hidden>
+    <div class="toolbar">
+      <input id="map-search" class="field" type="search" placeholder="Search repos or topics" aria-label="Search repos">
+      <div class="legend" id="map-legend" aria-label="Clusters"></div>
+      <label class="toggle"><input type="checkbox" id="map-pin"> pin where dropped</label>
+      <button class="btn" id="map-reset" type="button">Reset</button>
+    </div>
+    <div class="map-wrap">
+      <svg id="map-svg" role="img" aria-label="Draggable map of repositories grouped by topic"></svg>
+      <aside class="drawer" id="map-drawer" hidden></aside>
+      <p class="hint">Drag a bubble and it springs back to where its meaning puts it. Scroll to zoom, drag the background to pan, click a bubble for details.</p>
+    </div>
+  </section>
+
+  <section id="view-dashboard" class="view" role="tabpanel" aria-labelledby="tab-dashboard" hidden>
+    <div class="toolbar">
+      <div class="seg" id="dash-range" role="group" aria-label="Date range">
+        <button type="button" data-days="30">30 days</button>
+        <button type="button" data-days="90">90 days</button>
+        <button type="button" data-days="365">12 months</button>
+      </div>
+      <span class="filters" id="dash-filters"></span>
+      <label class="slider">EMA smoothing <input type="range" id="dash-alpha" min="0.05" max="0.6" step="0.05" value="0.15"> <output id="dash-alpha-out">0.15</output></label>
+      <span class="asof muted" id="dash-asof"></span>
+    </div>
+    <div class="kpis" id="dash-kpis"></div>
+    <div class="grid">
+      <div class="card wide"><h3>Contributions per day <span class="muted">drag across the chart to filter everything</span></h3><div id="chart-daily" class="chart"></div></div>
+      <div class="card"><h3>By weekday</h3><div id="chart-weekday" class="chart"></div></div>
+      <div class="card wide"><h3>Last 12 months <span class="muted">click a week to select it</span></h3><div id="chart-heatmap" class="chart"></div></div>
+      <div class="card"><h3>Language mix <span class="muted">click to filter projects</span></h3><div id="chart-langs" class="chart"></div></div>
+      <div class="card wide"><h3>Projects <span class="muted" id="repo-count"></span></h3><div class="table-wrap"><table class="repos" id="repo-table"></table></div></div>
+      <div class="card"><h3>Live activity <span class="muted">public events, real time</span></h3><ol class="feed" id="live-feed"></ol></div>
+    </div>
+  </section>
+</main>
+
+<div class="tooltip" id="tooltip" role="status" hidden></div>
+
+<footer class="foot muted">
+  Data refreshes hourly from the GitHub API; the activity feed and header update live. Private repositories count toward totals only and are never named.
+  <a href="https://github.com/nikhilreddy00/nikhilreddy00">Source</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

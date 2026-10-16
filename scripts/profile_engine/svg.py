@@ -19,6 +19,9 @@ PALETTES = {
         "teal": "#39c5bb", "blue": "#58a6ff", "purple": "#bc8cff", "green": "#3fb950",
         "orange": "#f0883e", "pink": "#f778ba", "yellow": "#e3b341", "red": "#f85149",
         "dot_red": "#ff5f57", "dot_yellow": "#febc2e", "dot_green": "#28c840",
+        # Categorical slots, validated for colour-vision deficiency on this surface.
+        "c1": "#3987e5", "c2": "#d95926", "c3": "#199e70", "c4": "#c98500",
+        "c5": "#d55181", "c6": "#008300", "c7": "#9085e9", "c8": "#e66767",
     },
     "light": {
         "bg": "#ffffff", "panel": "#f6f8fa", "line": "#d0d7de", "grid": "#eaeef2",
@@ -26,10 +29,12 @@ PALETTES = {
         "teal": "#0b7a75", "blue": "#0969da", "purple": "#8250df", "green": "#1a7f37",
         "orange": "#bc4c00", "pink": "#bf3989", "yellow": "#9a6700", "red": "#cf222e",
         "dot_red": "#ff5f57", "dot_yellow": "#febc2e", "dot_green": "#28c840",
+        "c1": "#2a78d6", "c2": "#eb6834", "c3": "#1baf7a", "c4": "#eda100",
+        "c5": "#e87ba4", "c6": "#008300", "c7": "#6250d6", "c8": "#e34948",
     },
 }
 
-CATEGORICAL = ["blue", "purple", "green", "orange", "pink", "teal", "yellow"]
+CATEGORICAL = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
 
 
 def esc(s) -> str:

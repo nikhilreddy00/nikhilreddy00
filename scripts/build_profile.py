@@ -23,15 +23,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from profile_engine import cards, latent, metrics, readme  # noqa: E402
+from profile_engine import cards, latent, metrics, readme, site  # noqa: E402
 from profile_engine.github import fetch  # noqa: E402
 
 ASSETS = ROOT / "assets"
+SITE_DATA = ROOT / "site" / "data.json"
 FINGERPRINT = ASSETS / ".fingerprint"
 
 
-def render(m: metrics.Metrics, config: dict) -> tuple[dict[str, str], dict[str, str]]:
-    """Return (asset files, README live sections)."""
+def render(m: metrics.Metrics, config: dict) -> tuple[dict[str, str], dict[str, str], str]:
+    """Return (asset files, README live sections, site data)."""
     points, clusters = latent.embed(m.public_repos, config["latent_space"]["labels"])
     files = {}
     for mode in ("dark", "light"):
@@ -39,14 +40,14 @@ def render(m: metrics.Metrics, config: dict) -> tuple[dict[str, str], dict[str, 
         files[f"latent-space-{mode}.svg"] = cards.latent_map(points, clusters, m, mode)
         files[f"training-run-{mode}.svg"] = cards.training_run(m, mode)
         files[f"training-history-{mode}.svg"] = cards.training_history(m, mode)
-    return files, readme.sections(m, points, clusters)
+    return files, readme.sections(m, points, clusters), site.build(m, points, clusters, config)
 
 
 def fingerprint(m: metrics.Metrics, config: dict) -> str:
     """Hash of the outputs with the clock pinned to midnight, so hour-only changes don't count."""
     day = m.generated_at.replace(hour=0, minute=0, second=0, microsecond=0)
-    files, live = render(dataclasses.replace(m, generated_at=day), config)
-    blob = "".join(v for _, v in sorted(files.items())) + "".join(v for _, v in sorted(live.items()))
+    files, live, data = render(dataclasses.replace(m, generated_at=day), config)
+    blob = "".join(v for _, v in sorted(files.items())) + "".join(v for _, v in sorted(live.items())) + data
     return hashlib.sha256(blob.encode()).hexdigest()
 
 
@@ -80,9 +81,11 @@ def main() -> int:
         return 0
 
     ASSETS.mkdir(exist_ok=True)
-    files, live = render(m, config)
+    files, live, data = render(m, config)
     for name, svg in files.items():
         (ASSETS / name).write_text(svg)
+    SITE_DATA.parent.mkdir(exist_ok=True)
+    SITE_DATA.write_text(data)
     readme_path = ROOT / "README.md"
     readme_path.write_text(readme.update(readme_path.read_text(), m, live))
     FINGERPRINT.write_text(fp + "\n")
