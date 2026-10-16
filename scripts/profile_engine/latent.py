@@ -155,6 +155,8 @@ def embed(repos: list[Repo], label_rules: dict[str, list[str]]) -> tuple[list[Po
     dims = min(10, len(repos) - 1)
     z = u[:, :dims] * s[:dims]
     z /= np.linalg.norm(z, axis=1, keepdims=True) + 1e-12
+    z = np.round(z, 6)   # drop BLAS-level noise so reruns give identical maps
+    z = _fix_signs(z)
 
     best = None
     for k in range(3, min(7, len(repos) - 1) + 1):
@@ -181,9 +183,11 @@ def _single_row(repos: list[Repo]) -> tuple[list[Point], list[Cluster]]:
 
 
 def _fix_signs(a: np.ndarray) -> np.ndarray:
-    """SVD axes have arbitrary sign; pin them so the map doesn't flip between runs."""
+    """SVD/eigen axes have arbitrary sign; make each column's first clearly
+    non-zero entry positive so the map doesn't mirror between runs."""
     for axis in range(a.shape[1]):
-        if a[np.abs(a[:, axis]).argmax(), axis] < 0:
+        nz = np.flatnonzero(np.abs(a[:, axis]) > 1e-6)
+        if len(nz) and a[nz[0], axis] < 0:
             a[:, axis] *= -1
     return a
 
@@ -206,12 +210,13 @@ def _layout(z: np.ndarray, labels: np.ndarray, k: int, aspect: float = 2.4) -> n
     # Member offsets: project onto the global principal axes, scale to a radius.
     zc = z - z.mean(0)
     _, _, vt = np.linalg.svd(zc, full_matrices=False)
+    axes = _fix_signs(vt[:2].T.copy())
     xy = np.zeros((len(z), 2))
     radius = {}
     for j in range(k):
         idx = np.where(labels == j)[0]
         radius[j] = 0.07 + 0.045 * np.sqrt(len(idx))
-        off = _fix_signs((z[idx] - centroids[j]) @ vt[:2].T)
+        off = (z[idx] - centroids[j]) @ axes
         scale = np.abs(off).max() or 1
         xy[idx] = off / scale * radius[j] * np.array([1.6, 1.0])
 
