@@ -96,10 +96,10 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 | **Data analytics** | [Loan-Performance-Data-Insights](https://github.com/nikhilreddy00/Loan-Performance-Data-Insights), [SEC-Corporate-Filings-Insights](https://github.com/nikhilreddy00/SEC-Corporate-Filings-Insights), [Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics](https://github.com/nikhilreddy00/Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics), [NYSO-Electricity-Consumption-and-Pricing-Insights](https://github.com/nikhilreddy00/NYSO-Electricity-Consumption-and-Pricing-Insights) | `insights` · `learning` · `big` · `loan` · `machine` · `electricity` |
 | **Agentic RAG** | [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa), [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | `pdf` · `langchain` · `chunks` · `venv` · `answering` · `question` |
 | **Classical ML** | [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork), [Customer-Churn-Prediction](https://github.com/nikhilreddy00/Customer-Churn-Prediction), [HealthInsurance-PremiumPrediction](https://github.com/nikhilreddy00/HealthInsurance-PremiumPrediction), [LinearRegression](https://github.com/nikhilreddy00/LinearRegression) | `linear` · `regression` · `model` · `customer` · `eda` · `numerical` |
-| **Voice agents** | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent), [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews), [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | `voice` · `claude` · `cartesia` · `call` · `deepgram` · `warning` |
+| **Multi-agent systems** | [AnalystAI](https://github.com/nikhilreddy00/AnalystAI), [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews), [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | `claude` · `wiki` · `pages` · `travel` · `multi-agent` · `sonnet` |
 | **Health AI** | [mirofish-meta-layoffs](https://github.com/nikhilreddy00/mirofish-meta-layoffs), [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API), [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | `drug` · `safety` · `intelligence` · `mirofish` · `pubmed` · `knowledge` |
 | **Document Q&amp;A** | [sec-finance-rag](https://github.com/nikhilreddy00/sec-finance-rag), [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag), [resumegenerator](https://github.com/nikhilreddy00/resumegenerator), [Metadata-Aware-Rag](https://github.com/nikhilreddy00/Metadata-Aware-Rag) | `sec` · `filings` · `rag` · `edgar` · `claude` · `html` |
-| **Computer use** | [AnalystAI](https://github.com/nikhilreddy00/AnalystAI), [praxis](https://github.com/nikhilreddy00/praxis), [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | `wiki` · `pages` · `claude` · `travel` · `llm` · `ai-agents` |
+| **Voice agents** | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent), [praxis](https://github.com/nikhilreddy00/praxis), [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | `real` · `voice` · `cartesia` · `agent` · `call` · `deepgram` |
 <!--live:clusters:end-->
 
 </details>
@@ -109,7 +109,7 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:recent:start-->
 | Project | What it does | Language | Last push |
 | :-- | :-- | :-- | :-- |
-| [**clinic-voice-agent**](https://github.com/nikhilreddy00/clinic-voice-agent) ★3 | 📞 An always-on AI voice agent that answers a real phone and books clinic appointments end-to-end… | Python | Sep 07, 2026 |
+| [**clinic-voice-agent**](https://github.com/nikhilreddy00/clinic-voice-agent) ★3 | 📞 An always-on AI voice agent that answers a real phone and books clinic appointments end-to-end… | Python | Nov 04, 2026 |
 | [**student-mental-health-ews**](https://github.com/nikhilreddy00/student-mental-health-ews) | 🎓 AI-powered early warning system detecting struggling university students weeks before crisis… | Jupyter Notebook | Aug 22, 2026 |
 | [**outbound-clinic-voice-agent**](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | AI voice agent that calls patients after hospital discharge, screens for warning signs, and… | Python | Aug 02, 2026 |
 | [**mirofish-meta-layoffs**](https://github.com/nikhilreddy00/mirofish-meta-layoffs) | AI-powered multi-agent simulation of Meta's April 2026 layoffs — 26 stakeholder agents, 720… | Python | May 01, 2026 |
@@ -160,7 +160,7 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 | [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API) | 1 | `███░░░░░░░░░░░░░` 4% |
 | [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
 
-<sub>Plus 31 private contributions that GitHub counts but doesn't attribute to a repository.</sub>
+<sub>Plus 32 private contributions that GitHub counts but doesn't attribute to a repository.</sub>
 <!--live:repos:end-->
 
 </details>
@@ -199,4 +199,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-04 11:21 EST<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-04 17:14 EST<!--live:updated:end--></sub>
