@@ -147,10 +147,11 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:repos:start-->
 | Repository | Commits · 12 mo | Share |
 | :-- | --: | :-- |
-| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `████████████████` 21% |
-| [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `██████████░░░░░░` 12% |
+| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `████████████████` 19% |
 | [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `██████████░░░░░░` 12% |
+| [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `██████████░░░░░░` 12% |
 | [praxis](https://github.com/nikhilreddy00/praxis) | 3 | `██████████░░░░░░` 12% |
+| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 3 | `██████████░░░░░░` 12% |
 | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent) | 2 | `██████░░░░░░░░░░` 8% |
 | [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork) | 2 | `██████░░░░░░░░░░` 8% |
 | [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
@@ -158,7 +159,6 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 | [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | 1 | `███░░░░░░░░░░░░░` 4% |
 | [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag) | 1 | `███░░░░░░░░░░░░░` 4% |
 | [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API) | 1 | `███░░░░░░░░░░░░░` 4% |
-| [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
 
 <sub>Plus 32 private contributions that GitHub counts but doesn't attribute to a repository.</sub>
 <!--live:repos:end-->
@@ -199,4 +199,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-06 13:30 EST<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-06 18:32 EST<!--live:updated:end--></sub>
