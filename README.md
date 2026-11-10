@@ -147,18 +147,18 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:repos:start-->
 | Repository | Commits · 12 mo | Share |
 | :-- | --: | :-- |
-| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `████████████████` 18% |
-| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 5 | `████████████████` 18% |
-| [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `██████████░░░░░░` 11% |
-| [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `██████████░░░░░░` 11% |
-| [praxis](https://github.com/nikhilreddy00/praxis) | 3 | `██████████░░░░░░` 11% |
-| [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent) | 2 | `██████░░░░░░░░░░` 7% |
-| [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork) | 2 | `██████░░░░░░░░░░` 7% |
-| [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | 1 | `███░░░░░░░░░░░░░` 4% |
-| [mirofish-meta-layoffs](https://github.com/nikhilreddy00/mirofish-meta-layoffs) | 1 | `███░░░░░░░░░░░░░` 4% |
-| [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | 1 | `███░░░░░░░░░░░░░` 4% |
-| [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag) | 1 | `███░░░░░░░░░░░░░` 4% |
-| [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API) | 1 | `███░░░░░░░░░░░░░` 4% |
+| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 6 | `████████████████` 21% |
+| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `█████████████░░░` 17% |
+| [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `████████░░░░░░░░` 10% |
+| [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `████████░░░░░░░░` 10% |
+| [praxis](https://github.com/nikhilreddy00/praxis) | 3 | `████████░░░░░░░░` 10% |
+| [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent) | 2 | `█████░░░░░░░░░░░` 7% |
+| [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork) | 2 | `█████░░░░░░░░░░░` 7% |
+| [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | 1 | `███░░░░░░░░░░░░░` 3% |
+| [mirofish-meta-layoffs](https://github.com/nikhilreddy00/mirofish-meta-layoffs) | 1 | `███░░░░░░░░░░░░░` 3% |
+| [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | 1 | `███░░░░░░░░░░░░░` 3% |
+| [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag) | 1 | `███░░░░░░░░░░░░░` 3% |
+| [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API) | 1 | `███░░░░░░░░░░░░░` 3% |
 
 <sub>Plus 32 private contributions that GitHub counts but doesn't attribute to a repository.</sub>
 <!--live:repos:end-->
@@ -199,4 +199,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-09 21:58 EST<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-10 13:43 EST<!--live:updated:end--></sub>
