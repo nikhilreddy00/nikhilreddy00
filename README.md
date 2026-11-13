@@ -147,11 +147,11 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:repos:start-->
 | Repository | Commits · 12 mo | Share |
 | :-- | --: | :-- |
-| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 8 | `████████████████` 26% |
-| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `██████████░░░░░░` 16% |
-| [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `██████░░░░░░░░░░` 10% |
-| [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `██████░░░░░░░░░░` 10% |
-| [praxis](https://github.com/nikhilreddy00/praxis) | 3 | `██████░░░░░░░░░░` 10% |
+| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 9 | `████████████████` 28% |
+| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `█████████░░░░░░░` 16% |
+| [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `█████░░░░░░░░░░░` 9% |
+| [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `█████░░░░░░░░░░░` 9% |
+| [praxis](https://github.com/nikhilreddy00/praxis) | 3 | `█████░░░░░░░░░░░` 9% |
 | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent) | 2 | `████░░░░░░░░░░░░` 6% |
 | [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork) | 2 | `████░░░░░░░░░░░░` 6% |
 | [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | 1 | `██░░░░░░░░░░░░░░` 3% |
@@ -199,4 +199,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-12 21:58 EST<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-13 06:04 EST<!--live:updated:end--></sub>
