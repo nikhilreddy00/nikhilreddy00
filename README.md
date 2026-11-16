@@ -147,8 +147,8 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:repos:start-->
 | Repository | Commits · 12 mo | Share |
 | :-- | --: | :-- |
-| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 14 | `████████████████` 38% |
-| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `██████░░░░░░░░░░` 14% |
+| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 16 | `████████████████` 41% |
+| [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `█████░░░░░░░░░░░` 13% |
 | [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `███░░░░░░░░░░░░░` 8% |
 | [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `███░░░░░░░░░░░░░` 8% |
 | [praxis](https://github.com/nikhilreddy00/praxis) | 3 | `███░░░░░░░░░░░░░` 8% |
@@ -199,4 +199,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-16 04:48 EST<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-16 15:30 EST<!--live:updated:end--></sub>
