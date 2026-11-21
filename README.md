@@ -109,7 +109,7 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:recent:start-->
 | Project | What it does | Language | Last push |
 | :-- | :-- | :-- | :-- |
-| [**clinic-voice-agent**](https://github.com/nikhilreddy00/clinic-voice-agent) ★3 | 📞 An always-on AI voice agent that answers a real phone and books clinic appointments end-to-end… | Python | Nov 04, 2026 |
+| [**clinic-voice-agent**](https://github.com/nikhilreddy00/clinic-voice-agent) ★2 | 📞 An always-on AI voice agent that answers a real phone and books clinic appointments end-to-end… | Python | Nov 04, 2026 |
 | [**student-mental-health-ews**](https://github.com/nikhilreddy00/student-mental-health-ews) | 🎓 AI-powered early warning system detecting struggling university students weeks before crisis… | Jupyter Notebook | Aug 22, 2026 |
 | [**outbound-clinic-voice-agent**](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | AI voice agent that calls patients after hospital discharge, screens for warning signs, and… | Python | Aug 02, 2026 |
 | [**mirofish-meta-layoffs**](https://github.com/nikhilreddy00/mirofish-meta-layoffs) | AI-powered multi-agent simulation of Meta's April 2026 layoffs — 26 stakeholder agents, 720… | Python | May 01, 2026 |
@@ -199,4 +199,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-21 02:13 EST<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-21 16:13 EST<!--live:updated:end--></sub>
