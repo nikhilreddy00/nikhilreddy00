@@ -99,7 +99,7 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 | **Voice agents** | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent), [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews), [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent), [resumegenerator](https://github.com/nikhilreddy00/resumegenerator) | `claude` · `voice` · `cartesia` · `call` · `deepgram` · `warning` |
 | **Health AI** | [mirofish-meta-layoffs](https://github.com/nikhilreddy00/mirofish-meta-layoffs), [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API), [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | `drug` · `safety` · `intelligence` · `mirofish` · `pubmed` · `knowledge` |
 | **Agentic RAG** | [sec-finance-rag](https://github.com/nikhilreddy00/sec-finance-rag), [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag), [Metadata-Aware-Rag](https://github.com/nikhilreddy00/Metadata-Aware-Rag) | `sec` · `filings` · `rag` · `edgar` · `html` · `finance` |
-| **Computer use** | [AnalystAI](https://github.com/nikhilreddy00/AnalystAI), [praxis](https://github.com/nikhilreddy00/praxis), [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | `wiki` · `claude` · `travel` · `pages` · `llm` · `writes` |
+| **Computer use** | [AnalystAI](https://github.com/nikhilreddy00/AnalystAI), [praxis](https://github.com/nikhilreddy00/praxis), [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | `wiki` · `claude` · `travel` · `pages` · `llm` · `ai-agents` |
 <!--live:clusters:end-->
 
 </details>
@@ -147,7 +147,7 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:repos:start-->
 | Repository | Commits · 12 mo | Share |
 | :-- | --: | :-- |
-| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 28 | `████████████████` 55% |
+| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 29 | `████████████████` 56% |
 | [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `███░░░░░░░░░░░░░` 10% |
 | [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `██░░░░░░░░░░░░░░` 6% |
 | [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `██░░░░░░░░░░░░░░` 6% |
@@ -199,4 +199,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-20 19:00 EST<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-21 02:13 EST<!--live:updated:end--></sub>
