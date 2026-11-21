@@ -94,12 +94,12 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 | Cluster | Repos | Strongest terms |
 | :-- | :-- | :-- |
 | **Data analytics** | [Loan-Performance-Data-Insights](https://github.com/nikhilreddy00/Loan-Performance-Data-Insights), [SEC-Corporate-Filings-Insights](https://github.com/nikhilreddy00/SEC-Corporate-Filings-Insights), [Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics](https://github.com/nikhilreddy00/Urban-Transit-Optimization-and-Fare-Prediction---NYC-Taxi-Analytics), [NYSO-Electricity-Consumption-and-Pricing-Insights](https://github.com/nikhilreddy00/NYSO-Electricity-Consumption-and-Pricing-Insights) | `insights` · `learning` · `big` · `loan` · `machine` · `electricity` |
-| **Agentic RAG** | [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa), [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | `pdf` · `langchain` · `chunks` · `venv` · `answering` · `question` |
+| **Document Q&amp;A** | [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa), [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | `pdf` · `langchain` · `chunks` · `venv` · `answering` · `question` |
 | **Classical ML** | [MNIST-NeuralNetwork](https://github.com/nikhilreddy00/MNIST-NeuralNetwork), [Customer-Churn-Prediction](https://github.com/nikhilreddy00/Customer-Churn-Prediction), [HealthInsurance-PremiumPrediction](https://github.com/nikhilreddy00/HealthInsurance-PremiumPrediction), [LinearRegression](https://github.com/nikhilreddy00/LinearRegression) | `linear` · `regression` · `model` · `customer` · `eda` · `numerical` |
-| **Voice agents** | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent), [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews), [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent) | `voice` · `claude` · `cartesia` · `call` · `deepgram` · `warning` |
+| **Voice agents** | [clinic-voice-agent](https://github.com/nikhilreddy00/clinic-voice-agent), [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews), [outbound-clinic-voice-agent](https://github.com/nikhilreddy00/outbound-clinic-voice-agent), [resumegenerator](https://github.com/nikhilreddy00/resumegenerator) | `claude` · `voice` · `cartesia` · `call` · `deepgram` · `warning` |
 | **Health AI** | [mirofish-meta-layoffs](https://github.com/nikhilreddy00/mirofish-meta-layoffs), [MedSignal-API](https://github.com/nikhilreddy00/MedSignal-API), [pharma-agent](https://github.com/nikhilreddy00/pharma-agent) | `drug` · `safety` · `intelligence` · `mirofish` · `pubmed` · `knowledge` |
-| **Document Q&amp;A** | [sec-finance-rag](https://github.com/nikhilreddy00/sec-finance-rag), [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag), [resumegenerator](https://github.com/nikhilreddy00/resumegenerator), [Metadata-Aware-Rag](https://github.com/nikhilreddy00/Metadata-Aware-Rag) | `sec` · `filings` · `rag` · `edgar` · `claude` · `html` |
-| **Computer use** | [AnalystAI](https://github.com/nikhilreddy00/AnalystAI), [praxis](https://github.com/nikhilreddy00/praxis), [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | `wiki` · `pages` · `claude` · `travel` · `llm` · `ai-agents` |
+| **Agentic RAG** | [sec-finance-rag](https://github.com/nikhilreddy00/sec-finance-rag), [vectorless-rag](https://github.com/nikhilreddy00/vectorless-rag), [Metadata-Aware-Rag](https://github.com/nikhilreddy00/Metadata-Aware-Rag) | `sec` · `filings` · `rag` · `edgar` · `html` · `finance` |
+| **Computer use** | [AnalystAI](https://github.com/nikhilreddy00/AnalystAI), [praxis](https://github.com/nikhilreddy00/praxis), [travel-wiki](https://github.com/nikhilreddy00/travel-wiki) | `wiki` · `claude` · `travel` · `pages` · `llm` · `writes` |
 <!--live:clusters:end-->
 
 </details>
@@ -147,7 +147,7 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 <!--live:repos:start-->
 | Repository | Commits · 12 mo | Share |
 | :-- | --: | :-- |
-| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 26 | `████████████████` 53% |
+| [AnalystAI](https://github.com/nikhilreddy00/AnalystAI) | 28 | `████████████████` 55% |
 | [rag-pdf-qa](https://github.com/nikhilreddy00/rag-pdf-qa) | 5 | `███░░░░░░░░░░░░░` 10% |
 | [student-mental-health-ews](https://github.com/nikhilreddy00/student-mental-health-ews) | 3 | `██░░░░░░░░░░░░░░` 6% |
 | [rag-multipdf-qa](https://github.com/nikhilreddy00/rag-multipdf-qa) | 3 | `██░░░░░░░░░░░░░░` 6% |
@@ -199,4 +199,4 @@ Each repo becomes a TF-IDF vector over its README, description and topics, which
 
 ---
 
-<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-20 04:12 EST<!--live:updated:end--></sub>
+<sub>The visuals on this page are rebuilt every hour by a GitHub Action from live GitHub data. Private repositories count toward totals only and are never named. Last update: <!--live:updated:start-->2026-11-20 19:00 EST<!--live:updated:end--></sub>
